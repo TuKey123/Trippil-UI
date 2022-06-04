@@ -3,7 +3,11 @@
   class="d-flex gap-3 flex-wrap flex-grow-1"
 >
   <ng-container *ngFor="let album of albums$ | async">
-    <app-album-card class="flex-grow-1" [album]="album"></app-album-card>
+    <app-album-card
+      class="flex-grow-1"
+      [album]="album"
+      [showActions]="!!(isMyProfile$ | async)"
+    ></app-album-card>
   </ng-container>
 </section>
 

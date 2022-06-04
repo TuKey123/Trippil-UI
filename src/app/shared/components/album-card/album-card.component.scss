@@ -1,3 +1,22 @@
+:host {
+  ::ng-deep {
+    .dropdown-button .dx-icon {
+      color: white;
+      font-size: 24px;
+      width: max-content;
+    }
+  }
+}
+
+.dropdown-button {
+  right: 7px;
+  top: 8px;
+}
+
+.remove-album {
+  background-color: var(--bs-danger) !important;
+}
+
 .album-images {
   width: 100%;
   min-width: 300px;

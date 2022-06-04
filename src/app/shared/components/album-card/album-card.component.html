@@ -1,5 +1,5 @@
 <div class="tripill-card d-flex flex-column rounded-3 cursor-pointer bg-light">
-  <div class="album-images p-2">
+  <div class="album-images p-2 position-relative">
     <div
       class="album-image rounded-3 bg-info"
       [ngStyle]="{
@@ -18,6 +18,22 @@
         'background-image': 'url(' + (album.images ? album.images[2] : '') + ')'
       }"
     ></div>
+    <dx-drop-down-button
+      *ngIf="showActions"
+      class="position-absolute text-white dropdown-button"
+      icon="overflow"
+      stylingMode="text"
+      [showArrowIcon]="false"
+      [dropDownOptions]="{ width: 170 }"
+    >
+      <dxi-item>
+        <div *dxTemplate class="remove-album">
+          <span class="text-white" (click)="onRemoveAlbum()">
+            Remove the album
+          </span>
+        </div>
+      </dxi-item>
+    </dx-drop-down-button>
   </div>
   <div class="d-flex flex-column p-2">
     <span class="description">{{ album?.name }}</span>

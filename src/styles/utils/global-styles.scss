@@ -1,0 +1,31 @@
+.button-primary {
+  background-color: var(--bs-primary);
+  color: white;
+  border: none;
+  height: 42px;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #33a0fd;
+    color: white;
+  }
+
+  span {
+    color: white;
+  }
+}
+
+.tripill-container {
+  border-radius: 32px;
+  background-color: white;
+}
+
+.tripill-card {
+  cursor: pointer;
+  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%) !important;
+
+  &:hover {
+    box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%) !important;
+  }
+}

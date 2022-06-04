@@ -1,0 +1,22 @@
+<form class="d-flex flex-column gap-2" (submit)="onSubmit($event)">
+  <dx-text-box label="*Code" labelMode="floating" [(value)]="verifyCode">
+    <dx-validator>
+      <dxi-validation-rule
+        type="required"
+        message="Code is required"
+      ></dxi-validation-rule>
+      <dxi-validation-rule
+        type="stringLength"
+        message="Verify code must have 5 digits"
+        [min]="5"
+        [max]="5"
+      ></dxi-validation-rule>
+    </dx-validator>
+  </dx-text-box>
+  <dx-button
+    class="button-primary"
+    text="VERIFY"
+    [useSubmitBehavior]="true"
+  ></dx-button>
+  <p class="text-center">Please check email for the verification code</p>
+</form>

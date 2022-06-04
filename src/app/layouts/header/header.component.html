@@ -1,0 +1,27 @@
+<dx-toolbar class="tripill-header">
+  <dxi-item location="before">
+    <div *dxTemplate>
+      <h2 class="fw-bold">Tripill</h2>
+    </div>
+  </dxi-item>
+  <dxi-item location="after">
+    <div *dxTemplate>
+      <dx-drop-down-button
+        icon="chevrondown"
+        width="50px"
+        stylingMode="text"
+        [hoverStateEnabled]="false"
+        [focusStateEnabled]="false"
+        [showArrowIcon]="false"
+        [dropDownOptions]="{ width: 100 }"
+
+      >
+        <dxi-item>
+          <div *dxTemplate>
+            <span (click)="logout()">Logout</span>
+          </div>
+        </dxi-item>
+      </dx-drop-down-button>
+    </div>
+  </dxi-item>
+</dx-toolbar>

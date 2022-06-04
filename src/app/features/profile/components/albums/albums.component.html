@@ -1,0 +1,12 @@
+<section
+  *ngIf="!loading; else appLoading"
+  class="d-flex gap-3 flex-wrap flex-grow-1"
+>
+  <ng-container *ngFor="let album of albums$ | async">
+    <app-album-card class="flex-grow-1" [album]="album"></app-album-card>
+  </ng-container>
+</section>
+
+<ng-template #appLoading>
+  <app-loading></app-loading>
+</ng-template>

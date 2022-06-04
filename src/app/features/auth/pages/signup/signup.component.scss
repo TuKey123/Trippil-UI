@@ -1,0 +1,29 @@
+:host {
+  ::ng-deep {
+    .dx-progressbar-container {
+      border: none;
+      border-radius: 0;
+      height: 4px;
+      background-color: var(--bs-gray-200);
+    }
+
+    .dx-progressbar-range {
+      box-sizing: border-box;
+    }
+  }
+}
+
+.content {
+  width: 27%;
+  max-width: 420px;
+  min-width: 320px;
+}
+
+.signup-form {
+  border-radius: 32px;
+}
+
+.link {
+  color: var(--bs-dark);
+  text-decoration: none;
+}

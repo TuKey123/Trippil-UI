@@ -1,0 +1,77 @@
+<div class="tripill-card d-flex flex-column rounded-3 cursor-pointer bg-light">
+  <div class="p-2 position-relative">
+    <img
+      class="trip-image rounded-3"
+      [src]="trip?.image ?? 'assets/no-image.png'"
+    />
+    <dx-drop-down-button
+      *ngIf="showActions"
+      class="position-absolute text-white dropdown-button"
+      icon="overflow"
+      stylingMode="text"
+      [showArrowIcon]="false"
+      [dropDownOptions]="{ width: 150 }"
+    >
+      <dxi-item>
+        <div *dxTemplate>
+          <span (click)="onAddToAlbum()">Add to an album</span>
+        </div>
+      </dxi-item>
+      <dxi-item>
+        <div *dxTemplate class="remove-trip">
+          <span class="text-white" (click)="onRemoveTrip()">
+            Remove the trip
+          </span>
+        </div>
+      </dxi-item>
+    </dx-drop-down-button>
+  </div>
+  <div class="d-flex flex-column p-2">
+    <div class="d-flex justify-content-between">
+      <span class="description">{{ trip?.name }}</span>
+      <div>
+        <span class="description me-2">{{ trip?.collaborators?.length }}</span>
+        <i class="dx-icon-group"> </i>
+      </div>
+    </div>
+    <span class="description">{{ trip?.location }}</span>
+  </div>
+</div>
+
+<dx-popup
+  width="25vw"
+  height="55vh"
+  title="Albums"
+  [(visible)]="popupVisible"
+  [showTitle]="true"
+  [showCloseButton]="false"
+  [closeOnOutsideClick]="true"
+  [dragEnabled]="false"
+>
+  <div *dxTemplate="let data of 'content'">
+    <div class="d-flex flex-column justify-content-between h-100">
+      <dx-scroll-view
+        class="flex-grow-1"
+        [scrollByContent]="true"
+        [scrollByThumb]="true"
+      >
+        <div class="d-flex flex-column gap-2">
+          <ng-container *ngFor="let album of albums">
+            <div
+              class="album p-3 rounded-3"
+              [ngClass]="{ active: trip?.album === album?.id }"
+              (click)="onAlbumChanged(album)"
+            >
+              {{ album?.name }}
+            </div>
+          </ng-container>
+        </div>
+      </dx-scroll-view>
+      <dx-button
+        class="button-primary"
+        text="Save"
+        (onClick)="saveAlbumSelection()"
+      ></dx-button>
+    </div>
+  </div>
+</dx-popup>

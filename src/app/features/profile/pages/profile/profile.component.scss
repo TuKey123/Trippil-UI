@@ -1,0 +1,55 @@
+:host {
+  ::ng-deep {
+    .tab-item {
+      margin: 0;
+      font-weight: 500;
+      padding: 0 32px;
+    }
+
+    .profile-tab {
+      border-top-left-radius: 32px;
+      border-top-right-radius: 32px;
+      background-color: var(--bs-gray-100);
+      border: 1px solid var(--bs-gray-200);
+
+      .dx-toolbar-item {
+        cursor: pointer;
+        padding: 0 !important;
+
+        &:hover .tab-item {
+          color: var(--bs-primary) !important;
+        }
+      }
+    }
+
+    .action-button {
+      height: 100% !important;
+      display: none;
+    }
+  }
+}
+
+.active-button {
+  display: block;
+}
+
+.profile-container {
+  height: calc(100% - 70px);
+}
+
+.active-link {
+  color: var(--bs-primary);
+}
+
+.user-profile {
+  width: 290px;
+  flex-shrink: 0;
+}
+
+.description-title {
+  font-weight: 500;
+}
+
+.description {
+  font-size: 12px;
+}

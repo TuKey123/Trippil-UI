@@ -1,0 +1,54 @@
+<section
+  class="w-100 h-100 d-flex justify-content-center align-items-center bg-light"
+>
+  <form
+    class="login-form p-5 d-flex flex-column bg-white"
+    (submit)="onSubmit($event)"
+  >
+    <h1 class="w-100 text-center">Log in</h1>
+    <dx-text-box
+      label="*Email"
+      labelMode="floating"
+      mode="email"
+      [(value)]="user.email"
+    >
+      <dx-validator>
+        <dxi-validation-rule
+          type="required"
+          message="Email is required"
+        ></dxi-validation-rule>
+        <dxi-validation-rule
+          type="email"
+          message="Email is invalid"
+        ></dxi-validation-rule>
+      </dx-validator>
+    </dx-text-box>
+    <dx-text-box
+      label="*Password"
+      labelMode="floating"
+      mode="password"
+      [(value)]="user.password"
+    >
+      <dx-validator>
+        <dxi-validation-rule
+          type="required"
+          message="Password is required"
+        ></dxi-validation-rule
+      ></dx-validator>
+    </dx-text-box>
+    <p class="text-end">
+      <a class="link text-primary" routerLink="/auth/reset-password">
+        Forgot password
+      </a>
+    </p>
+    <dx-button
+      class="button-primary rounded-3"
+      text="LOGIN"
+      [useSubmitBehavior]="true"
+    ></dx-button>
+    <p class="text-center">
+      No account?
+      <a class="link text-primary" routerLink="/auth/sign-up">Sign up</a>
+    </p>
+  </form>
+</section>

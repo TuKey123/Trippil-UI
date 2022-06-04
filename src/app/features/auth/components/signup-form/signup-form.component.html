@@ -1,0 +1,65 @@
+<form class="d-flex flex-column gap-2 bg-white" (submit)="onSubmit($event)">
+  <dx-text-box
+    label="*First name"
+    labelMode="floating"
+    [(value)]="user.firstName"
+  >
+    <dx-validator>
+      <dxi-validation-rule
+        type="required"
+        message="First Name is required"
+      ></dxi-validation-rule>
+    </dx-validator>
+  </dx-text-box>
+  <dx-text-box
+    label="*Last Name"
+    labelMode="floating"
+    [(value)]="user.lastName"
+  >
+    <dx-validator>
+      <dxi-validation-rule
+        type="required"
+        message="Last Name is required"
+      ></dxi-validation-rule>
+    </dx-validator>
+  </dx-text-box>
+  <dx-text-box
+    label="*Email"
+    labelMode="floating"
+    mode="email"
+    [(value)]="user.email"
+  >
+    <dx-validator>
+      <dxi-validation-rule
+        type="required"
+        message="Email is required"
+      ></dxi-validation-rule>
+      <dxi-validation-rule
+        type="email"
+        message="Email is invalid"
+      ></dxi-validation-rule>
+    </dx-validator>
+  </dx-text-box>
+  <dx-text-box
+    label="*Password"
+    labelMode="floating"
+    mode="password"
+    [(value)]="user.password"
+  >
+    <dx-validator>
+      <dxi-validation-rule
+        type="required"
+        message="Password is required"
+      ></dxi-validation-rule
+    ></dx-validator>
+  </dx-text-box>
+  <dx-button
+    class="button-primary rounded-3"
+    text="CONTINUE"
+    [useSubmitBehavior]="true"
+  ></dx-button>
+  <p class="text-center">
+    Already have an account?
+    <a class="link text-primary" routerLink="/auth/login">Sign in</a>
+  </p>
+</form>

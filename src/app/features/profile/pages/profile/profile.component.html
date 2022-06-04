@@ -1,0 +1,121 @@
+<app-header></app-header>
+<section class="profile-container d-flex gap-3 p-5">
+  <div class="tripill-container user-profile p-4">
+    <dx-button
+      *ngIf="isMyProfile"
+      class="button-primary w-100"
+      text="Edit Profile"
+    >
+    </dx-button>
+    <ng-container *ngIf="userProfile$ | async as userProfile">
+      <div class="main-info d-flex flex-column align-items-center pt-2 gap-1">
+        <img
+          class="rounded-circle p-2 border border-primary"
+          src="https://cdn-icons-png.flaticon.com/512/147/147142.png"
+          width="70"
+          height="70"
+        />
+        <span>{{ userProfile?.firstName }} {{ userProfile?.lastName }}</span>
+        <span>{{ userProfile?.email }}</span>
+      </div>
+      <div class="additional-info d-flex flex-column pt-2 gap-4">
+        <div>
+          <span class="description-title">About</span>
+          <div class="description">
+            {{ userProfile?.about ?? "N/A" }}
+          </div>
+        </div>
+        <div>
+          <span class="description-title">Posts</span>
+          <div class="description">{{ userProfile?.trips }} Posted Trips</div>
+        </div>
+        <div>
+          <span class="description-title">Date of birth</span>
+          <div class="description">
+            {{
+              userProfile?.dateOfBirth
+                ? (userProfile?.dateOfBirth | date)
+                : "N/A"
+            }}
+          </div>
+        </div>
+        <div>
+          <span class="description-title"> Member since</span>
+          <div class="description">
+            {{ userProfile?.dateJoined | date }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="tripill-container flex-grow-1 d-flex flex-column">
+    <dx-toolbar class="profile-tab px-4 pt-4 pb-2">
+      <dxi-item location="before" *ngFor="let tabItem of tabItems$ | async">
+        <div *dxTemplate>
+          <p
+            [routerLink]="[tabItem.routerLink]"
+            routerLinkActive="active-link"
+            class="tab-item"
+          >
+            {{ tabItem.name }}
+          </p>
+        </div>
+      </dxi-item>
+      <dxi-item *ngIf="isMyProfile" location="after">
+        <dx-button
+          class="button-primary action-button"
+          text="Add a New Trip"
+          routerLinkActive="active-button"
+          [routerLink]="['/profile/trips']"
+          (onClick)="showTripPopup = true"
+        ></dx-button>
+        <dx-button
+          class="button-primary action-button"
+          text="Add a New Album"
+          routerLinkActive="active-button"
+          [routerLink]="['/profile/albums']"
+          (onClick)="showAlbumPopup = true"
+        ></dx-button>
+      </dxi-item>
+    </dx-toolbar>
+    <dx-scroll-view [scrollByContent]="true" [scrollByThumb]="true">
+      <div class="flex-grow-1 p-4">
+        <router-outlet></router-outlet>
+      </div>
+    </dx-scroll-view>
+  </div>
+</section>
+
+<dx-popup
+  *ngIf="showAlbumPopup"
+  title="Add a New Album"
+  width="25vw"
+  height="20vh"
+  [(visible)]="showAlbumPopup"
+  [showTitle]="true"
+  [showCloseButton]="false"
+  [closeOnOutsideClick]="true"
+  [dragEnabled]="false"
+>
+  <div *dxTemplate="let date of 'content'">
+    <form
+      class="d-flex flex-column justify-content-between h-100"
+      (submit)="onAddNewAlbum($event)"
+    >
+      <dx-text-box label="*Name" labelMode="floating" [(value)]="albumName">
+        <dx-validator>
+          <dxi-validation-rule
+            type="required"
+            message="This field is required"
+          ></dxi-validation-rule>
+        </dx-validator>
+      </dx-text-box>
+      <dx-button
+        class="button-primary rounded-3"
+        text="SAVE"
+        [useSubmitBehavior]="true"
+      ></dx-button>
+    </form>
+  </div>
+</dx-popup>

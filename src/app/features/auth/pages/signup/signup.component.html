@@ -1,0 +1,47 @@
+<section
+  class="w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-light"
+>
+  <div class="content">
+    <p><a class="link" routerLink="/auth/login">< Back to home</a></p>
+    <div class="signup-form p-5 d-flex flex-column gap-2 bg-white">
+      <h1 class="w-100 text-center">Create Account</h1>
+      <div class="progress-info">
+        <div class="d-flex justify-content-between">
+          <div class="text-primary">Information</div>
+          <div
+            [ngClass]="[
+              progressValue >= 60 ? 'text-primary' : 'text-secondary'
+            ]"
+          >
+            Veritication
+          </div>
+          <div
+            [ngClass]="[
+              progressValue >= 90 ? 'text-primary' : 'text-secondary'
+            ]"
+          >
+            Finish
+          </div>
+        </div>
+        <dx-progress-bar
+          height="4"
+          [showStatus]="false"
+          [min]="0"
+          [max]="90"
+          [value]="progressValue"
+        ></dx-progress-bar>
+      </div>
+      <container [ngSwitch]="progressValue">
+        <ng-container *ngSwitchCase="30">
+          <app-signup-form (submitFormEmit)="signup($event)"> </app-signup-form>
+        </ng-container>
+        <ng-container *ngSwitchCase="60">
+          <app-verify-code
+            (sendVerifyCodeEmit)="sendVerifyCode($event)"
+          ></app-verify-code>
+        </ng-container>
+        <ng-container *ngSwitchDefault> <app-finish></app-finish></ng-container>
+      </container>
+    </div>
+  </div>
+</section>

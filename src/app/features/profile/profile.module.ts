@@ -11,6 +11,7 @@ import { AppreciatedComponent } from './components/appreciated/appreciated.compo
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { ProfileResolver } from './profile.resolver';
 import { ProfileStore } from './store';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ProfileStore } from './store';
     TripsComponent,
     AlbumsComponent,
     AppreciatedComponent,
+    SettingsComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,46 @@
+:host {
+  ::ng-deep {
+    .dx-calendar-selected-date {
+      color: white;
+      background-color: var(--bs-primary);
+      box-shadow: var(--bs-primary);
+
+      span {
+        color: white;
+      }
+    }
+
+    .dx-calendar-selected-date.dx-calendar-contoured-date {
+      color: white;
+      background-color: var(--bs-primary);
+      box-shadow: var(--bs-primary);
+    }
+  }
+}
+
+.settings-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 400px;
+  width: 50%;
+  background-color: white;
+  border-radius: 10px;
+}
+
+img {
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  object-fit: cover;
+}
+
+.top-section {
+  margin-top: 38px;
+}
+
+.header {
+  height: 70px;
+  background-color: var(--bs-light);
+}

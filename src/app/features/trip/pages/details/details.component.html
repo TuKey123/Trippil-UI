@@ -1,0 +1,126 @@
+<section class="trip-container d-flex flex-column gap-2 p-2">
+  <section class="d-flex flex-grow-1">
+    <!-- SIDEBAR -->
+    <div
+      class="sidebar d-flex flex-column gap-2 p-3 border bg-white radius shadow-sm"
+    >
+      <div class="d-flex justify-content-between align-items-center">
+        <dx-text-box class="trip-name" value="Chill Trip"></dx-text-box>
+        <dx-button class="button-primary" text="Save Changes"></dx-button>
+      </div>
+      <div class="position-relative">
+        <input
+          #imageFile
+          type="file"
+          class="d-none"
+          accept="image/png, image/jpeg"
+          (change)="onFileSelect($event)"
+        />
+        <img
+          src="https://res.cloudinary.com/tripill/image/upload/v1/users/Nostalgia_bkecra"
+          width="100%"
+          height="200"
+          class="radius"
+        />
+        <dx-drop-down-button
+          class="position-absolute text-white dropdown-button"
+          icon="overflow"
+          stylingMode="text"
+          [showArrowIcon]="false"
+          [dropDownOptions]="{ width: 190 }"
+        >
+          <dxi-item>
+            <div *dxTemplate (click)="imageFile.click()">
+              <span> Upload image </span>
+            </div>
+          </dxi-item>
+          <dxi-item>
+            <div *dxTemplate class="remove-image">
+              <span class="text-white"> Remove image </span>
+            </div>
+          </dxi-item>
+        </dx-drop-down-button>
+      </div>
+
+      <dx-text-area
+        height="185"
+        label="Description"
+        labelMode="floating"
+        class="flex-grow-1"
+      ></dx-text-area>
+      <div class="d-flex gap-2 justify-content-between">
+        <dx-date-box type="date" label="*Start date" labelMode="floating">
+          <dxi-validation-rule
+            type="required"
+            message="Start date is required"
+          ></dxi-validation-rule>
+        </dx-date-box>
+        <dx-date-box type="date" label="*End date" labelMode="floating">
+          <dxi-validation-rule
+            type="required"
+            message="End date is required"
+          ></dxi-validation-rule
+        ></dx-date-box>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content d-flex flex-column flex-grow-1 ps-2 gap-2">
+      <div
+        id="map"
+        class="flex-grow-1 bg-white shadow-sm border radius position-relative"
+      >
+        <dx-button
+          text="Add new item"
+          class="map-btn_add button-primary position-absolute top-0 end-0"
+          (onClick)="addNewItem()"
+        ></dx-button>
+      </div>
+    </div>
+  </section>
+
+  <div class="pathway radius bg-white border shadow-sm p-2">
+    <dx-scroll-view direction="horizontal" showScrollbar="always">
+      <ng-container *ngFor="let item of items; let index = index">
+        <div
+          class="item-card border bg-white radius d-flex flex-column gap-1 p-1"
+          (click)="showPopupDetails = true; selectedItem = item"
+        >
+          <img
+            [src]="item?.imageUrl || 'assets/no-image.png'"
+            class="item-image radius"
+            height="100"
+          />
+          <div class="d-flex gap-1 justify-content-between">
+            <div class="item-name">{{ item?.name }}</div>
+            <i
+              class="dx-icon-trash fs-5 text-danger cursor-pointer"
+              (click)="removeItem(item, index)"
+            >
+            </i>
+          </div>
+        </div>
+      </ng-container>
+    </dx-scroll-view>
+  </div>
+</section>
+
+<dx-popup
+  title="Details"
+  width="70vw"
+  height="65vh"
+  [(visible)]="showPopupDetails"
+  [showTitle]="false"
+  [showCloseButton]="false"
+  [closeOnOutsideClick]="true"
+  [dragEnabled]="false"
+  [wrapperAttr]="{ class: 'item-details-popup' }"
+>
+  >
+  <div *dxTemplate="let data of 'content'">
+    <app-item-details
+      [itemDetail]="selectedItem"
+      (saveChangesEmit)="onItemSaveChanges($event)"
+    ></app-item-details>
+  </div>
+</dx-popup>

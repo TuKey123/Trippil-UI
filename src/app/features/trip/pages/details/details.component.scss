@@ -1,0 +1,120 @@
+:host {
+  ::ng-deep {
+    .dx-scrollable-content {
+      display: flex;
+    }
+
+    .dx-scrollview-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mapboxgl-canvas {
+      width: 100% !important;
+    }
+
+    .mapboxgl-ctrl-geocoder {
+      margin: 10px 148px;
+    }
+
+    .dropdown-button .dx-icon {
+      color: white;
+      font-size: 30px;
+      width: max-content;
+    }
+
+    .trip-name {
+      border: none;
+
+      .dx-texteditor-input {
+        font-size: 26px;
+        font-weight: 600;
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+::ng-deep.item-details-popup {
+  .dx-popup-normal {
+    border-radius: 20px;
+  }
+
+  .dx-popup-content {
+    padding: 0px !important;
+  }
+}
+
+.trip-container {
+  height: calc(100% - 70px);
+}
+
+.sidebar {
+  min-width: 250px;
+  width: 30%;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.item-image {
+  object-fit: cover;
+  background-color: var(--bs-gray-300);
+}
+
+.content {
+  max-width: calc(100% - 250px);
+}
+
+.title {
+  background-color: #137991d1;
+}
+
+.pathway {
+  height: 20%;
+}
+
+.map-btn {
+  &_add {
+    z-index: 2;
+    margin: 10px;
+    height: 36px;
+  }
+}
+
+.item {
+  &-card {
+    cursor: pointer;
+    width: 250px;
+  }
+
+  &-name {
+    font-weight: 500;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+}
+
+.radius {
+  border-radius: 10px;
+}
+
+.button-primary {
+  height: 36px;
+}
+
+.dropdown-button {
+  right: 7px;
+  top: 8px;
+}
+
+.remove-image {
+  background-color: var(--bs-danger) !important;
+}

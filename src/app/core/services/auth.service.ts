@@ -8,7 +8,6 @@ import { LocalStorageService } from './local-storage.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(
-    private _http: HttpClient,
     private _localStorage: LocalStorageService,
     private _apiService: ApiService
   ) {}

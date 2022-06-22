@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards';
+import { NavigationBaseComponent } from './navigations/navigation-base/navigation-base.component';
 
 const routes: Routes = [
   {
@@ -15,9 +16,24 @@ const routes: Routes = [
   },
   {
     path: 'profile',
+    component: NavigationBaseComponent,
     loadChildren: () =>
       import('./features/profile/profile.module').then((m) => m.ProfileModule),
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'albums',
+    component: NavigationBaseComponent,
+    loadChildren: () =>
+      import('./features/album/album.module').then((m) => m.AlbumModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'trips',
+    component: NavigationBaseComponent,
+    loadChildren: () =>
+      import('./features/trip/trip.module').then((m) => m.TripModule),
+    // canActivate: [AuthGuard],
   },
 ];
 

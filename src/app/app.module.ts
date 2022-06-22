@@ -1,6 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
@@ -13,6 +12,7 @@ import { AppLoadService } from './core/services';
 import { LayoutsModule } from './layouts/layouts.module';
 import { SharedModule } from './shared/shared.module';
 import { ComponentsModule } from './shared/components/components.module';
+import { NavigationsModule } from './navigations/navigations.module';
 
 function initializeApp(appLoadService: AppLoadService) {
   return (): Observable<any> => {
@@ -29,8 +29,8 @@ function initializeApp(appLoadService: AppLoadService) {
     CoreModule,
     SharedModule,
     LayoutsModule,
+    NavigationsModule,
     ComponentsModule,
-    GoogleMapsModule,
     GooglePlaceModule,
   ],
   providers: [

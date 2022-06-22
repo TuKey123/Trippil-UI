@@ -7,9 +7,41 @@
       class="flex-grow-1"
       [album]="album"
       [showActions]="!!(isMyProfile$ | async)"
+      (clickEmitter)="onClick(album)"
+      (editAlbumEmitter)="showAlbumDetails(album)"
+      (removeAlbumEmitter)="onRemoveAlbum(album)"
     ></app-album-card>
   </ng-container>
 </section>
+
+<app-side-panel
+  [opened]="isSidePanelOpened"
+  (disposing)="isSidePanelOpened = false"
+>
+  <div class="d-flex justify-content-between">
+    <dx-text-box
+      class="album-name"
+      [value]="albumDetails?.name!"
+      (valueChange)="albumDetails.name = $event"
+    ></dx-text-box>
+    <dx-button
+      class="button-primary"
+      text="Save"
+      (onClick)="onSave()"
+    ></dx-button>
+  </div>
+
+  <div class="d-flex flex-column gap-2">
+    <ng-container *ngFor="let trip of albumDetails?.trips">
+      <app-trip-card
+        class="flex-grow-1"
+        [data]="trip"
+        [showRemoveAction]="true"
+        (removeTripEmitter)="onRemoveTrip(trip)"
+      ></app-trip-card>
+    </ng-container>
+  </div>
+</app-side-panel>
 
 <ng-template #appLoading>
   <app-loading></app-loading>

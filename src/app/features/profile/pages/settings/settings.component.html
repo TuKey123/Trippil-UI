@@ -1,0 +1,81 @@
+<form
+  *ngIf="userProfile"
+  class="settings-container shadow-sm"
+  (submit)="onSubmit($event)"
+>
+  <div class="header rounded-top position-relative">
+    <img
+      class="avatar rounded-circle position-absolute shadow"
+      [src]="
+        userProfile?.image ??
+        'https://cdn-icons-png.flaticon.com/512/147/147142.png'
+      "
+      width="100"
+      height="100"
+    />
+  </div>
+  <div class="body p-3 d-flex flex-column gap-3">
+    <div class="top-section text-center">
+      <dx-button
+        class="button-primary"
+        text="Upload Image"
+        (onClick)="imageInput.click()"
+      ></dx-button>
+      <input
+        #imageInput
+        type="file"
+        class="d-none"
+        accept="image/png, image/jpeg"
+        (change)="handleFileInput($event.target)"
+      />
+    </div>
+    <div class="d-flex gap-3">
+      <dx-text-box
+        label="*First Name"
+        labelMode="floating"
+        class="flex-grow-1"
+        [(value)]="userProfile.firstName"
+      >
+        <dxi-validation-rule
+          type="required"
+          message="First Name is required"
+        ></dxi-validation-rule>
+      </dx-text-box>
+      <dx-text-box
+        label="*Last Name"
+        labelMode="floating"
+        class="flex-grow-1"
+        [(value)]="userProfile.lastName"
+      >
+        <dxi-validation-rule
+          type="required"
+          message="Last Name is required"
+        ></dxi-validation-rule
+      ></dx-text-box>
+    </div>
+    <div>
+      <dx-calendar
+        width="100%"
+        [(value)]="userProfile.dateOfBirth"
+      ></dx-calendar>
+    </div>
+    <div>
+      <dx-text-area
+        width="100%"
+        label="About"
+        labelMode="floating"
+        [(value)]="userProfile.about"
+      ></dx-text-area>
+    </div>
+  </div>
+  <div class="footer text-end p-3">
+    <div class="d-flex justify-content-end gap-2">
+      <dx-button text="Cancel" [routerLink]="['/profile']"></dx-button>
+      <dx-button
+        class="button-primary"
+        text="Save"
+        [useSubmitBehavior]="true"
+      ></dx-button>
+    </div>
+  </div>
+</form>

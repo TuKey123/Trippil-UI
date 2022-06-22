@@ -4,6 +4,7 @@ import { AlbumsComponent } from './components/albums/albums.component';
 import { AppreciatedComponent } from './components/appreciated/appreciated.component';
 import { TripsComponent } from './components/trips/trips.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 import { ProfileResolver } from './profile.resolver';
 
 const children = [
@@ -28,15 +29,24 @@ const children = [
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'public',
+    pathMatch: 'full',
+  },
+  {
+    path: 'public',
     component: ProfileComponent,
     resolve: { userProfile: ProfileResolver },
     children: children,
   },
   {
-    path: ':id',
+    path: 'public/:id',
     component: ProfileComponent,
     resolve: { userProfile: ProfileResolver },
     children: children,
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
   },
 ];
 

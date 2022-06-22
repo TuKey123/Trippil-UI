@@ -7,7 +7,27 @@
   &:hover,
   &:active,
   &:focus {
-    background-color: #33a0fd;
+    background-color: var(--bs-primary);
+    filter: brightness(0.9);
+    color: white;
+  }
+
+  span {
+    color: white;
+  }
+}
+
+.button-danger {
+  background-color: var(--bs-danger);
+  color: white;
+  border: none;
+  height: 42px;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: var(--bs-danger);
+    filter: brightness(0.9);
     color: white;
   }
 
@@ -28,4 +48,8 @@
   &:hover {
     box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%) !important;
   }
+}
+
+img {
+  object-fit: cover;
 }

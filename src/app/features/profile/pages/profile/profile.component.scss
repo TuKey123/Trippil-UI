@@ -29,6 +29,14 @@
   }
 }
 
+.main-info img {
+  object-fit: cover;
+}
+
+.drawer-hide {
+  left: 100%;
+}
+
 .active-button {
   display: block;
 }
@@ -46,10 +54,17 @@
   flex-shrink: 0;
 }
 
-.description-title {
-  font-weight: 500;
-}
-
 .description {
   font-size: 12px;
+
+  &-title {
+    font-weight: 500;
+  }
+}
+
+.upload-image {
+  width: 250px;
+  height: 250px;
+  border: 3px dashed var(--bs-gray-300);
+  cursor: pointer;
 }

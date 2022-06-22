@@ -8,6 +8,11 @@
   }
 }
 
+.dropdown-button {
+  right: 16px;
+  top: 8px;
+}
+
 .trip-image {
   min-width: 300px;
   width: 100%;
@@ -18,11 +23,6 @@
 .description {
   font-size: 12px;
   font-weight: 500;
-}
-
-.dropdown-button {
-  right: 16px;
-  top: 8px;
 }
 
 .remove-trip {

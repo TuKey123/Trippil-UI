@@ -1,0 +1,114 @@
+<section>
+  <div class="flex-grow-1 d-flex flex-column">
+    <dx-toolbar class="profile-tab px-4 pt-4 pb-2">
+      <dxi-item
+        location="before"
+        *ngFor="let tabItem of tabItems; let index = index"
+      >
+        <div *dxTemplate>
+          <p
+            class="tab-item"
+            [ngClass]="{ 'activated-tab': index === activatedTab }"
+            (click)="activatedTab = index"
+          >
+            {{ tabItem.name }}
+          </p>
+        </div>
+      </dxi-item>
+      <dxi-item location="after">
+        <div *dxTemplate>
+          <dx-button
+            class="button-primary"
+            text="Save Changes"
+            (onClick)="onSave()"
+          ></dx-button>
+        </div>
+      </dxi-item>
+    </dx-toolbar>
+    <dx-scroll-view [scrollByContent]="true" [scrollByThumb]="true">
+      <div class="tab-content d-flex flex-column gap-2 flex-grow-1 p-4">
+        <ng-container [ngSwitch]="activatedTab">
+          <ng-container *ngSwitchCase="0">
+            <h3>{{ data?.name }}</h3>
+            <div class="position-relative">
+              <input
+                #imageFile
+                type="file"
+                class="d-none"
+                accept="image/png, image/jpeg"
+                (change)="onFileSelect($event)"
+              />
+              <img
+                height="200"
+                width="100%"
+                class="item-image radius"
+                [src]="data?.imageUrl || 'assets/no-image.png'"
+              />
+              <dx-drop-down-button
+                class="position-absolute text-white dropdown-button"
+                icon="overflow"
+                stylingMode="text"
+                [showArrowIcon]="false"
+                [dropDownOptions]="{ width: 190 }"
+              >
+                <dxi-item>
+                  <div *dxTemplate (click)="imageFile.click()">
+                    <span> Upload image </span>
+                  </div>
+                </dxi-item>
+                <dxi-item>
+                  <div
+                    *dxTemplate
+                    class="remove-image"
+                    (click)="onRemoveImage()"
+                  >
+                    <span class="text-white"> Remove image </span>
+                  </div>
+                </dxi-item>
+              </dx-drop-down-button>
+            </div>
+            <dx-text-area
+              height="185"
+              label="Description"
+              labelMode="floating"
+            ></dx-text-area>
+            <div class="d-flex gap-2 justify-content-between">
+              <div class="d-flex gap-2 align-items-center">
+                <dx-date-box
+                  type="date"
+                  label="*Start date"
+                  labelMode="floating"
+                >
+                  <dxi-validation-rule
+                    type="required"
+                    message="Start date is required"
+                  ></dxi-validation-rule>
+                </dx-date-box>
+                <dx-date-box type="date" label="*End date" labelMode="floating">
+                  <dxi-validation-rule
+                    type="required"
+                    message="End date is required"
+                  ></dxi-validation-rule
+                ></dx-date-box>
+              </div>
+              <div
+                class="users d-flex align-items-center p-2 gap-1 justify-content-end"
+              >
+                <div class="user-recommended rounded-circle bg-secondary"></div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+            </ngx-editor-menu>
+            <ngx-editor
+              placeholder="Type here..."
+              [editor]="editor"
+              [(ngModel)]="html"
+            ></ngx-editor>
+          </ng-container>
+        </ng-container>
+      </div>
+    </dx-scroll-view>
+  </div>
+</section>

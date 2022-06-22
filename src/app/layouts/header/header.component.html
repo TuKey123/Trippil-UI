@@ -5,6 +5,17 @@
     </div>
   </dxi-item>
   <dxi-item location="after">
+    <img
+      class="rounded-circle shadow"
+      [src]="
+        (userProfile$ | async)?.image ??
+        'https://cdn-icons-png.flaticon.com/512/147/147142.png'
+      "
+      width="36"
+      height="36"
+    />
+  </dxi-item>
+  <dxi-item location="after">
     <div *dxTemplate>
       <dx-drop-down-button
         icon="chevrondown"
@@ -13,12 +24,25 @@
         [hoverStateEnabled]="false"
         [focusStateEnabled]="false"
         [showArrowIcon]="false"
-        [dropDownOptions]="{ width: 100 }"
-
+        [dropDownOptions]="{ width: 160 }"
       >
         <dxi-item>
           <div *dxTemplate>
-            <span (click)="logout()">Logout</span>
+            <p class="m-0" [routerLink]="['/profile']">
+              <span>My profile</span>
+            </p>
+          </div>
+        </dxi-item>
+        <dxi-item>
+          <div *dxTemplate>
+            <p class="m-0" [routerLink]="['/profile/settings']">
+              <span>Setting profile</span>
+            </p>
+          </div>
+        </dxi-item>
+        <dxi-item>
+          <div *dxTemplate (click)="logout()">
+            <span>Logout</span>
           </div>
         </dxi-item>
       </dx-drop-down-button>

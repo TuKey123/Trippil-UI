@@ -1,0 +1,22 @@
+<dx-drawer
+  class="position-fixed top-0 start-0"
+  openedStateMode="shrink"
+  revealMode="slide"
+  position="right"
+  height="100%"
+  [shading]="true"
+  [closeOnOutsideClick]="true"
+  [(opened)]="isSidePanelOpened"
+  [ngClass]="{
+    invisible: !isSidePanelOpened
+  }"
+  (onOptionChanged)="onOptionChanged($event)"
+>
+  <section *dxTemplate="let data of 'panel'" class="h-100" style="width: 350px">
+    <dx-scroll-view [scrollByContent]="true" [scrollByThumb]="true">
+      <div class="h-100 p-2">
+        <ng-content></ng-content>
+      </div>
+    </dx-scroll-view>
+  </section>
+</dx-drawer>

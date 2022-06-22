@@ -1,0 +1,17 @@
+<section
+  *ngIf="!loading; else appLoading"
+  class="album-details-container p-3 d-flex flex-column gap-3"
+>
+  <h3 class="p-3">{{ albumDetails?.name }}</h3>
+  <dx-scroll-view [scrollByContent]="true" [scrollByThumb]="true">
+    <div class="d-flex gap-2 flex-wrap p-3">
+      <ng-container *ngFor="let trip of albumDetails?.trips">
+        <app-trip-card class="flex-grow-1" [data]="trip"></app-trip-card>
+      </ng-container>
+    </div>
+  </dx-scroll-view>
+</section>
+
+<ng-template #appLoading>
+  <app-loading></app-loading>
+</ng-template>

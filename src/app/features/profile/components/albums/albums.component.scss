@@ -1,0 +1,12 @@
+:host {
+  ::ng-deep {
+    .album-name {
+      border: none;
+
+      .dx-texteditor-input {
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
+}

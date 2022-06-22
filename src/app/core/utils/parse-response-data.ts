@@ -1,6 +1,8 @@
 import { isObject } from './helpers';
 
 export function parsePytoJs(responseData: any) {
+  if (!responseData) return {};
+
   const keys = Object.keys(responseData).map((oldKey) => ({
     oldKey: oldKey,
     newKey: getNewKey(oldKey),

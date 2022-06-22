@@ -49,6 +49,12 @@ export class ProfileStore {
     this._albums$.next(albums);
   }
 
+  public removeAlbumStore(album: Album): void {
+    const albums = this._albums$.value.filter((data) => data.id !== album.id);
+
+    this._albums$.next(albums);
+  }
+
   public updateTripStore(data: Trip): void {
     const trips = this._trips$.value.map((trip) =>
       trip?.id === data.id ? data : trip

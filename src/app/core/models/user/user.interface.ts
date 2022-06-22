@@ -4,9 +4,10 @@ export interface User {
   lastName: string;
   email: string;
   about: string;
-  dateOfBirth: Date;
+  dateOfBirth: string | number | Date;
   dateJoined: Date;
   trips: number;
+  image: string;
 }
 
 export interface UserInput {

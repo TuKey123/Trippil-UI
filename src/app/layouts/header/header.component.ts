@@ -7,6 +7,8 @@ import { AuthService, NavigateService } from 'src/app/core/services';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
+  public userProfile$ = this._authService.userProfile$;
+
   constructor(
     private _authService: AuthService,
     private _navigateService: NavigateService

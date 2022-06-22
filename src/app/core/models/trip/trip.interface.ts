@@ -3,6 +3,6 @@ export interface Trip {
   name: string;
   location: string;
   image?: string;
-  collaborators: number[];
-  album: number;
+  collaborators?: number[];
+  album?: number;
 }

@@ -1,4 +1,7 @@
-<div class="tripill-card d-flex flex-column rounded-3 cursor-pointer bg-light">
+<div
+  class="tripill-card d-flex flex-column rounded-3 cursor-pointer bg-light"
+  [routerLink]="detailsLink"
+>
   <div class="p-2 position-relative">
     <img
       class="trip-image rounded-3"
@@ -10,7 +13,8 @@
       icon="overflow"
       stylingMode="text"
       [showArrowIcon]="false"
-      [dropDownOptions]="{ width: 150 }"
+      [dropDownOptions]="{ width: 170 }"
+      (click)="$event.stopPropagation(); $event.preventDefault()"
     >
       <dxi-item>
         <div *dxTemplate>
@@ -34,7 +38,16 @@
         <i class="dx-icon-group"> </i>
       </div>
     </div>
-    <span class="description">{{ trip?.location }}</span>
+    <div class="d-flex justify-content-between">
+      <span class="description">{{ trip?.location }}</span>
+      <div *ngIf="showRemoveAction">
+        <i
+          class="dx-icon-trash fs-5 text-danger cursor-pointer"
+          (click)="removeTripEmitter.emit()"
+        >
+        </i>
+      </div>
+    </div>
   </div>
 </div>
 

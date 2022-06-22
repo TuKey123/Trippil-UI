@@ -12,6 +12,10 @@ import {
   DxScrollViewModule,
   DxPopupModule,
   DxPopoverModule,
+  DxDrawerModule,
+  DxCalendarModule,
+  DxTextAreaModule,
+  DxDateBoxModule,
 } from 'devextreme-angular';
 
 const DEVEXTREME_MODULES = [
@@ -26,6 +30,10 @@ const DEVEXTREME_MODULES = [
   DxScrollViewModule,
   DxPopupModule,
   DxPopoverModule,
+  DxDrawerModule,
+  DxCalendarModule,
+  DxTextAreaModule,
+  DxDateBoxModule,
 ];
 
 const IMPORTS = [...DEVEXTREME_MODULES];

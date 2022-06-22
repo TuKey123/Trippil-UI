@@ -14,4 +14,8 @@ export class NavigateService {
   public homepage(): void {
     this._router.navigate(['/']);
   }
+
+  public albumDetails(id: number): void {
+    this._router.navigate([`/albums/${id}`]);
+  }
 }

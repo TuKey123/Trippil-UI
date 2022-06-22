@@ -10,13 +10,18 @@ import { Trip } from 'src/app/core/models/trip';
 export class TripCardComponent implements OnInit {
   @Input() public set data(value: Trip) {
     this.trip = { ...value };
+    this.detailsLink = `/trips/${this.trip?.id}`;
   }
-  @Input() albums!: Album[];
+  @Input() albums?: Album[];
   @Input() showActions = false;
+  @Input() showRemoveAction = false;
 
   @Output() saveAlbumSelectionEmit = new EventEmitter();
+  @Output() removeTripEmitter = new EventEmitter();
 
   public trip!: Trip;
+  public detailsLink!: string;
+
   public popupVisible = false;
 
   constructor() {}

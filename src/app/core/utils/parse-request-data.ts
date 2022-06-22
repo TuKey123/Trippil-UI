@@ -1,7 +1,7 @@
 import { isObject } from './helpers';
 
 export function parseJstoPy(requestData: any) {
-  if (isObject(requestData)) return requestData;
+  if (!isObject(requestData)) return requestData;
 
   const keys = Object.keys(requestData).map((oldKey) => ({
     oldKey: oldKey,

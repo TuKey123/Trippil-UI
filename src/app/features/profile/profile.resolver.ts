@@ -39,17 +39,21 @@ export class ProfileResolver implements Resolve<User> {
   public initTabItems(userId: number): void {
     const tabItems = [
       {
-        routerLink: userId ? `/profile/${userId}/trips` : '/profile/trips',
+        routerLink: userId
+          ? `/profile/public/${userId}/trips`
+          : '/profile/public/trips',
         name: 'TRIPS',
       },
       {
-        routerLink: userId ? `/profile/${userId}/albums` : '/profile/albums',
+        routerLink: userId
+          ? `/profile/public/${userId}/albums`
+          : '/profile/public/albums',
         name: 'ALBUMS',
       },
       {
         routerLink: userId
-          ? `/profile/${userId}/appreciated`
-          : '/profile/appreciated',
+          ? `/profile/public/${userId}/appreciated`
+          : '/profile/public/appreciated',
         name: 'APRRECIATED',
       },
     ];

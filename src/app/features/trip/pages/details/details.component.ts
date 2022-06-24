@@ -33,13 +33,13 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this._initMap();
-    // this._initAutoComplete();
+    this._initMap();
+    this._initAutoComplete();
 
     this._tripDetailService.getTripDetail(this.id).subscribe((data) => {
       this.tripDetail = data;
 
-      // this._initItemMarkers();
+      this._initItemMarkers();
     });
   }
 
@@ -83,7 +83,7 @@ export class DetailsComponent implements OnInit {
     const items = this.tripDetail.items?.map((item) => ({
       ...item,
       marker: new mapboxgl.Marker()
-        .setLngLat([item.lat, item.lng])
+        .setLngLat([item.lng, item.lat])
         .addTo(this.map),
     }));
 
@@ -96,10 +96,9 @@ export class DetailsComponent implements OnInit {
     this._tripDetailService
       .addTripItem({
         trip: this.tripDetail.id,
-        lat: this.searchResult.center[0],
-        lng: this.searchResult.center[1],
+        lng: this.searchResult.center[0],
+        lat: this.searchResult.center[1],
         location: this.searchResult.place_name,
-        image: '',
         startDate: new Date().toISOString(),
         endDate: new Date().toISOString(),
       })
@@ -148,10 +147,33 @@ export class DetailsComponent implements OnInit {
   public onItemSaveChanges(item: TripItem): void {
     this.showPopupDetails = false;
 
-    // this.items = this.items.map((data) => {
-    //   if (data.name === item.name) return item;
-    //   return data;
-    // });
+    this._appLoadingService.show();
+
+    this._tripDetailService
+      .updateTripItem({
+        id: item.id,
+        trip: item.trip,
+        lat: item.lat,
+        lng: item.lng,
+        location: item.location,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        note: item.note,
+        image: item.image,
+        description: item.description,
+      })
+      .pipe(finalize(() => this._appLoadingService.hide()))
+      .subscribe(() => {
+        const items = this.tripDetail.items.map((data) => {
+          if (data.id === item.id) return item;
+          return data;
+        });
+
+        this.tripDetail = {
+          ...this.tripDetail,
+          items: items,
+        };
+      });
   }
 
   public onFileSelect(event: any): void {

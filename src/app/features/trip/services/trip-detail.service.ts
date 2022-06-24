@@ -18,12 +18,18 @@ export class TripDetailService {
   }
 
   public addTripItem(
-    tripItem: Omit<TripItem, 'id' | 'marker'>
+    tripItem: Omit<TripItem, 'id' | 'image' | 'note' | 'description' | 'marker'>
   ): Observable<Omit<TripItem, 'marker'>> {
     return this._apiService.post(`items/`, tripItem);
   }
 
   public removeTripItem(tripId: number, itemId: number): Observable<number> {
     return this._apiService.delete(`trips/${tripId}/items/${itemId}`);
+  }
+
+  public updateTripItem(
+    tripItem: Omit<TripItem, 'marker'>
+  ): Observable<Omit<TripItem, 'marker'>> {
+    return this._apiService.update(`items/${tripItem.id}/`, tripItem);
   }
 }

@@ -10,11 +10,20 @@ export function parsePytoJs(responseData: any) {
 
   let convertedData = {};
   keys.forEach((key) => {
+    let data;
+    const oldData = responseData[key.oldKey];
+
+    if (isObject(oldData)) {
+      data = parsePytoJs(oldData);
+    } else if (Array.isArray(oldData)) {
+      data = oldData.map((data) => parsePytoJs(data));
+    } else {
+      data = oldData;
+    }
+
     convertedData = {
       ...convertedData,
-      [key.newKey]: isObject(responseData[key.oldKey])
-        ? parsePytoJs(responseData[key.oldKey])
-        : responseData[key.oldKey],
+      [key.newKey]: data,
     };
   });
 

@@ -71,6 +71,7 @@
               height="185"
               label="Description"
               labelMode="floating"
+              [(value)]="data.description"
             ></dx-text-area>
             <div class="d-flex gap-2 justify-content-between">
               <div class="d-flex gap-2 align-items-center">
@@ -110,7 +111,7 @@
             <ngx-editor
               placeholder="Type here..."
               [editor]="editor"
-              [(ngModel)]="html"
+              [(ngModel)]="data.note"
             ></ngx-editor>
           </ng-container>
         </ng-container>

@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { Editor, Toolbar } from 'ngx-editor';
-import { finalize, map } from 'rxjs';
+import { filter, finalize, map } from 'rxjs';
 import { TripItem } from 'src/app/core/models/trip';
 import { AppLoadingService, UploadFileService } from 'src/app/core/services';
 import { TAB_ITEMS } from '../../constants';
@@ -42,8 +42,6 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
     ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
 
-  public html: any;
-
   constructor(
     private _appLoadingService: AppLoadingService,
     private _uploadFileService: UploadFileService
@@ -66,16 +64,11 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
     this._uploadFileService
       .uploadImage(files)
       .pipe(
-        map((data) => {
-          const res = data as any;
-          return res.body;
-        }),
+        map((data) => (data as any).body),
+        filter((data) => !!data),
         finalize(() => this._appLoadingService.hide())
       )
-      .subscribe((data) => {
-        if (!data) return;
-        this.data.image = data.image;
-      });
+      .subscribe((data) => (this.data.image = data.image));
   }
 
   public onRemoveImage(): void {

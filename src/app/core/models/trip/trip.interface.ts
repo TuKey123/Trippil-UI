@@ -32,4 +32,6 @@ export interface TripItem {
   endDate: Date | string | number;
   marker?: mapboxgl.Marker;
   trip: number;
+  note: any;
+  description: string;
 }

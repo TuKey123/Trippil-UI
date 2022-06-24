@@ -46,3 +46,36 @@
 <ng-template #appLoading>
   <app-loading></app-loading>
 </ng-template>
+
+<dx-popup
+  *ngIf="showAlbumPopup"
+  width="25vw"
+  height="20vh"
+  [(visible)]="showAlbumPopup"
+  [showTitle]="false"
+  [showCloseButton]="false"
+  [closeOnOutsideClick]="true"
+  [dragEnabled]="false"
+  (onDisposing)="showAlbumPopup = false; albumName = ''"
+>
+  <div *dxTemplate="let date of 'content'">
+    <form
+      class="d-flex flex-column justify-content-between h-100"
+      (submit)="$event.preventDefault(); onAddNewAlbum()"
+    >
+      <dx-text-box label="*Name" labelMode="floating" [(value)]="albumName">
+        <dx-validator>
+          <dxi-validation-rule
+            type="required"
+            message="This field is required"
+          ></dxi-validation-rule>
+        </dx-validator>
+      </dx-text-box>
+      <dx-button
+        class="button-primary rounded-3"
+        text="SAVE"
+        [useSubmitBehavior]="true"
+      ></dx-button>
+    </form>
+  </div>
+</dx-popup>

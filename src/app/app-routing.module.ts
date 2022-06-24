@@ -33,7 +33,7 @@ const routes: Routes = [
     component: NavigationBaseComponent,
     loadChildren: () =>
       import('./features/trip/trip.module').then((m) => m.TripModule),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
 ];
 

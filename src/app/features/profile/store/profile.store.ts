@@ -37,6 +37,16 @@ export class ProfileStore {
     return this._tabItems$;
   }
 
+  private _showTripPopup$ = new BehaviorSubject<boolean>(false);
+  public get showTripPopup$(): BehaviorSubject<boolean> {
+    return this._showTripPopup$;
+  }
+
+  private _showAlbumPopup$ = new BehaviorSubject<boolean>(false);
+  public get showAlbumPopup$(): BehaviorSubject<boolean> {
+    return this._showAlbumPopup$;
+  }
+
   public setUserProfileStore(userProfile: User): void {
     this._userProfile$.next(userProfile);
   }
@@ -75,5 +85,23 @@ export class ProfileStore {
 
   public setTabItemsStore(value: { routerLink: string; name: string }[]): void {
     this._tabItems$.next(value);
+  }
+
+  public setShowTripPopup(value: boolean): void {
+    this._showTripPopup$.next(value);
+  }
+
+  public setShowAlbumPopup(value: boolean): void {
+    this._showAlbumPopup$.next(value);
+  }
+
+  public addNewTrip(data: Trip): void {
+    const trips = this._trips$.value;
+    this._trips$.next([...trips, data]);
+  }
+
+  public removeTrip(id: number): void {
+    const trips = this._trips$.value.filter((trip) => trip?.id !== id);
+    this._trips$.next(trips);
   }
 }

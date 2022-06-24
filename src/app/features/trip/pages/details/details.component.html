@@ -2,11 +2,19 @@
   <section class="d-flex flex-grow-1">
     <!-- SIDEBAR -->
     <div
+      *ngIf="tripDetail"
       class="sidebar d-flex flex-column gap-2 p-3 border bg-white radius shadow-sm"
     >
       <div class="d-flex justify-content-between align-items-center">
-        <dx-text-box class="trip-name" value="Chill Trip"></dx-text-box>
-        <dx-button class="button-primary" text="Save Changes"></dx-button>
+        <dx-text-box
+          class="trip-name"
+          [(value)]="tripDetail.name"
+        ></dx-text-box>
+        <dx-button
+          class="button-primary"
+          text="Save Changes"
+          (onClick)="onSaveChanges()"
+        ></dx-button>
       </div>
       <div class="position-relative">
         <input
@@ -17,10 +25,10 @@
           (change)="onFileSelect($event)"
         />
         <img
-          src="https://res.cloudinary.com/tripill/image/upload/v1/users/Nostalgia_bkecra"
           width="100%"
           height="200"
           class="radius"
+          [src]="tripDetail?.image || 'assets/no-image.png'"
         />
         <dx-drop-down-button
           class="position-absolute text-white dropdown-button"
@@ -35,7 +43,11 @@
             </div>
           </dxi-item>
           <dxi-item>
-            <div *dxTemplate class="remove-image">
+            <div
+              *dxTemplate
+              class="remove-image"
+              (click)="tripDetail.image = ''"
+            >
               <span class="text-white"> Remove image </span>
             </div>
           </dxi-item>
@@ -47,15 +59,26 @@
         label="Description"
         labelMode="floating"
         class="flex-grow-1"
+        [(value)]="tripDetail.description"
       ></dx-text-area>
       <div class="d-flex gap-2 justify-content-between">
-        <dx-date-box type="date" label="*Start date" labelMode="floating">
+        <dx-date-box
+          type="datetime"
+          label="*Start date"
+          labelMode="floating"
+          [(value)]="tripDetail.startDate"
+        >
           <dxi-validation-rule
             type="required"
             message="Start date is required"
           ></dxi-validation-rule>
         </dx-date-box>
-        <dx-date-box type="date" label="*End date" labelMode="floating">
+        <dx-date-box
+          type="datetime"
+          label="*End date"
+          labelMode="floating"
+          [(value)]="tripDetail.endDate"
+        >
           <dxi-validation-rule
             type="required"
             message="End date is required"
@@ -73,29 +96,29 @@
         <dx-button
           text="Add new item"
           class="map-btn_add button-primary position-absolute top-0 end-0"
-          (onClick)="addNewItem()"
+          (onClick)="onAddNewItem()"
         ></dx-button>
       </div>
     </div>
   </section>
 
-  <div class="pathway radius bg-white border shadow-sm p-2">
+  <div *ngIf="tripDetail" class="pathway radius bg-white border shadow-sm p-2">
     <dx-scroll-view direction="horizontal" showScrollbar="always">
-      <ng-container *ngFor="let item of items; let index = index">
+      <ng-container *ngFor="let item of tripDetail.items; let index = index">
         <div
           class="item-card border bg-white radius d-flex flex-column gap-1 p-1"
           (click)="showPopupDetails = true; selectedItem = item"
         >
           <img
-            [src]="item?.imageUrl || 'assets/no-image.png'"
+            [src]="item?.image || 'assets/no-image.png'"
             class="item-image radius"
             height="100"
           />
           <div class="d-flex gap-1 justify-content-between">
-            <div class="item-name">{{ item?.name }}</div>
+            <div class="item-name">{{ item?.location }}</div>
             <i
               class="dx-icon-trash fs-5 text-danger cursor-pointer"
-              (click)="removeItem(item, index)"
+              (click)="$event.stopPropagation(); onRemoveItem(item)"
             >
             </i>
           </div>

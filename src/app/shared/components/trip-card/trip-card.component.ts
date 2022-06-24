@@ -32,8 +32,6 @@ export class TripCardComponent implements OnInit {
     this.popupVisible = !this.popupVisible;
   }
 
-  public onRemoveTrip(): void {}
-
   public onAlbumChanged(album: Album): void {
     if (this.trip.album === album.id) {
       this.trip.album = 0;

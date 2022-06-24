@@ -29,7 +29,7 @@
       <div class="tab-content d-flex flex-column gap-2 flex-grow-1 p-4">
         <ng-container [ngSwitch]="activatedTab">
           <ng-container *ngSwitchCase="0">
-            <h3>{{ data?.name }}</h3>
+            <h3>{{ data?.location }}</h3>
             <div class="position-relative">
               <input
                 #imageFile
@@ -42,7 +42,7 @@
                 height="200"
                 width="100%"
                 class="item-image radius"
-                [src]="data?.imageUrl || 'assets/no-image.png'"
+                [src]="data?.image || 'assets/no-image.png'"
               />
               <dx-drop-down-button
                 class="position-absolute text-white dropdown-button"
@@ -75,16 +75,22 @@
             <div class="d-flex gap-2 justify-content-between">
               <div class="d-flex gap-2 align-items-center">
                 <dx-date-box
-                  type="date"
+                  type="datetime"
                   label="*Start date"
                   labelMode="floating"
+                  [(value)]="data.startDate"
                 >
                   <dxi-validation-rule
                     type="required"
                     message="Start date is required"
                   ></dxi-validation-rule>
                 </dx-date-box>
-                <dx-date-box type="date" label="*End date" labelMode="floating">
+                <dx-date-box
+                  type="datetime"
+                  label="*End date"
+                  labelMode="floating"
+                  [(value)]="data.endDate"
+                >
                   <dxi-validation-rule
                     type="required"
                     message="End date is required"

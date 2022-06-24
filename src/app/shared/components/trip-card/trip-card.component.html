@@ -23,7 +23,7 @@
       </dxi-item>
       <dxi-item>
         <div *dxTemplate class="remove-trip">
-          <span class="text-white" (click)="onRemoveTrip()">
+          <span class="text-white" (click)="removeTripEmitter.emit()">
             Remove the trip
           </span>
         </div>

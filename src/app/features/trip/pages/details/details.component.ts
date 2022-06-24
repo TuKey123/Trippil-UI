@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments';
-import * as mapboxgl from 'mapbox-gl';
-import { TripItem } from '../../interfaces';
 import { AppLoadingService, UploadFileService } from 'src/app/core/services';
+import { map, finalize, filter } from 'rxjs';
+import { TripDetailService } from '../../services';
+import { ActivatedRoute } from '@angular/router';
+import { TripDetail, TripItem } from 'src/app/core/models/trip';
+import * as mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { map, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-details',
@@ -16,24 +18,34 @@ export class DetailsComponent implements OnInit {
   public geocoder!: MapboxGeocoder;
   public searchResult!: any;
 
-  public items: TripItem[] = [];
-
   public showPopupDetails = false;
   public selectedItem!: TripItem;
 
+  public id = Number(this._route.snapshot.paramMap.get('id'));
+
+  public tripDetail!: TripDetail;
+
   constructor(
     private _appLoadingService: AppLoadingService,
-    private _uploadFileService: UploadFileService
+    private _uploadFileService: UploadFileService,
+    private _tripDetailService: TripDetailService,
+    private _route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this._appLoadingService.show();
+    // this._initMap();
+    // this._initAutoComplete();
 
-    this._initMap();
-    this._initAutoComplete();
+    this._tripDetailService.getTripDetail(this.id).subscribe((data) => {
+      this.tripDetail = data;
+
+      // this._initItemMarkers();
+    });
   }
 
   private _initMap(): void {
+    this._appLoadingService.show();
+
     this.map = new mapboxgl.Map({
       accessToken: environment.mapboxKey,
       container: 'map',
@@ -67,22 +79,79 @@ export class DetailsComponent implements OnInit {
     this.geocoder.on('result', ({ result }) => (this.searchResult = result));
   }
 
-  public addNewItem(): void {
-    this.geocoder.clear();
+  private _initItemMarkers(): void {
+    const items = this.tripDetail.items?.map((item) => ({
+      ...item,
+      marker: new mapboxgl.Marker()
+        .setLngLat([item.lat, item.lng])
+        .addTo(this.map),
+    }));
 
-    const marker = new mapboxgl.Marker()
-      .setLngLat(this.searchResult.center)
-      .addTo(this.map);
-
-    this.items.push({
-      marker: marker,
-      name: this.searchResult.place_name,
-    });
+    this.tripDetail = { ...this.tripDetail, items: items };
   }
 
-  public removeItem(item: TripItem, index: number): void {
-    item.marker.remove();
-    this.items.splice(index, 1);
+  public onAddNewItem(): void {
+    this._appLoadingService.show();
+
+    this._tripDetailService
+      .addTripItem({
+        trip: this.tripDetail.id,
+        lat: this.searchResult.center[0],
+        lng: this.searchResult.center[1],
+        location: this.searchResult.place_name,
+        image: '',
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString(),
+      })
+      .pipe(finalize(() => this._appLoadingService.hide()))
+      .subscribe((item) => {
+        this.geocoder.clear();
+
+        const marker = new mapboxgl.Marker()
+          .setLngLat(this.searchResult.center)
+          .addTo(this.map);
+
+        this.tripDetail = {
+          ...this.tripDetail,
+          items: [...this.tripDetail.items, { ...item, marker }],
+        };
+      });
+  }
+
+  public onRemoveItem(item: TripItem): void {
+    this._appLoadingService.show();
+
+    this._tripDetailService
+      .removeTripItem(this.tripDetail.id, item.id)
+      .pipe(finalize(() => this._appLoadingService.hide()))
+      .subscribe(() => {
+        const items = this.tripDetail.items.filter((data) => {
+          if (data.id !== item.id) return true;
+
+          data.marker?.remove();
+          return false;
+        });
+
+        this.tripDetail = { ...this.tripDetail, items };
+      });
+  }
+
+  public onSaveChanges(): void {
+    this._appLoadingService.show();
+
+    this._tripDetailService
+      .updateTripDetails(this.tripDetail)
+      .pipe(finalize(() => this._appLoadingService.hide()))
+      .subscribe();
+  }
+
+  public onItemSaveChanges(item: TripItem): void {
+    this.showPopupDetails = false;
+
+    // this.items = this.items.map((data) => {
+    //   if (data.name === item.name) return item;
+    //   return data;
+    // });
   }
 
   public onFileSelect(event: any): void {
@@ -92,23 +161,10 @@ export class DetailsComponent implements OnInit {
     this._uploadFileService
       .uploadImage(files)
       .pipe(
-        map((data) => {
-          const res = data as any;
-          return res.body;
-        }),
+        map((data) => (data as any).body),
+        filter((data) => !!data),
         finalize(() => this._appLoadingService.hide())
       )
-      .subscribe((data) => {
-        if (!data) return;
-      });
-  }
-
-  public onItemSaveChanges(item: TripItem): void {
-    this.showPopupDetails = false;
-
-    this.items = this.items.map((data) => {
-      if (data.name === item.name) return item;
-      return data;
-    });
+      .subscribe((data) => (this.tripDetail.image = data.image));
   }
 }

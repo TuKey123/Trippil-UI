@@ -3,7 +3,7 @@ import { finalize, Subscription } from 'rxjs';
 import { Album } from 'src/app/core/models/album';
 import { Trip } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
-import { NavigateService } from 'src/app/core/services';
+import { AppLoadingService, NavigateService } from 'src/app/core/services';
 import { ProfileService } from '../../services/profile.service';
 import { ProfileStore } from '../../store';
 
@@ -15,9 +15,12 @@ import { ProfileStore } from '../../store';
 export class AlbumsComponent implements OnInit, OnDestroy {
   public albums$ = this._profileStore.albums$;
   public isMyProfile$ = this._profileStore.isMyProfile$;
+  public showAlbumPopup$ = this._profileStore.showAlbumPopup$;
 
   public loading = false;
   public isSidePanelOpened = false;
+  public showAlbumPopup = false;
+  public albumName = '';
   public userProfile!: User;
 
   public albumDetails!: Album;
@@ -30,10 +33,15 @@ export class AlbumsComponent implements OnInit, OnDestroy {
   constructor(
     private _profileService: ProfileService,
     private _profileStore: ProfileStore,
-    private _navigateService: NavigateService
+    private _navigateService: NavigateService,
+    private _appLoadingService: AppLoadingService
   ) {}
 
   ngOnInit(): void {
+    this.subs = this.showAlbumPopup$.subscribe(
+      (data) => (this.showAlbumPopup = data)
+    );
+
     this.subs = this._profileStore.userProfile$.subscribe((userProfile) => {
       this.userProfile = userProfile;
       this.getUserAlbums(userProfile);
@@ -65,13 +73,26 @@ export class AlbumsComponent implements OnInit, OnDestroy {
       });
   }
 
+  public onAddNewAlbum(): void {
+    this.showAlbumPopup = false;
+
+    this._appLoadingService.show();
+
+    this._profileService
+      .createAlbum(this.albumName)
+      .pipe(finalize(() => this._appLoadingService.hide()))
+      .subscribe((data) => this._profileStore.createAlbumStore(data));
+
+    this.albumName = '';
+  }
+
   public onRemoveAlbum(album: Album): void {
     this.loading = true;
 
     this._profileService
       .removeAlbum(album.id)
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((data) => this._profileStore.removeAlbumStore(album));
+      .subscribe(() => this._profileStore.removeAlbumStore(album));
   }
 
   public onRemoveTrip(trip: Trip): void {

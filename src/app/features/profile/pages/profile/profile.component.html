@@ -71,14 +71,14 @@
           text="Add a New Trip"
           routerLinkActive="active-button"
           [routerLink]="['/profile/public/trips']"
-          (onClick)="showTripPopup = true"
+          (onClick)="showTripPopup$.next(true)"
         ></dx-button>
         <dx-button
           class="button-primary action-button"
           text="Add a New Album"
           routerLinkActive="active-button"
           [routerLink]="['/profile/public/albums']"
-          (onClick)="showAlbumPopup = true"
+          (onClick)="showAlbumPopup$.next(true)"
         ></dx-button>
       </dxi-item>
     </dx-toolbar>
@@ -89,109 +89,3 @@
     </dx-scroll-view>
   </div>
 </section>
-
-<dx-popup
-  *ngIf="showTripPopup"
-  width="50vw"
-  height="40vh"
-  [(visible)]="showTripPopup"
-  [showTitle]="false"
-  [showCloseButton]="false"
-  [closeOnOutsideClick]="true"
-  [dragEnabled]="false"
-  (onDisposing)="resetTripData()"
->
-  <div *dxTemplate="let date of 'content'">
-    <form
-      class="d-flex flex-column justify-content-between gap-3 h-100"
-      (submit)="onAddNewTrip($event)"
-    >
-      <div class="d-flex justify-content-between gap-3">
-        <div>
-          <div
-            class="upload-image d-flex justify-content-center align-items-center rounded position-relative"
-            (click)="imageFile.click()"
-          >
-            <input
-              #imageFile
-              type="file"
-              class="d-none"
-              accept="image/png, image/jpeg"
-              (change)="onFileSelect($event)"
-            />
-            <img
-              *ngIf="trip?.image"
-              class="w-100 h-100 position-absolute"
-              [src]="trip.image"
-            />
-            <i class="dx-icon-plus fs-2"></i>
-          </div>
-          <dx-button
-            class="button-danger mt-1 w-100"
-            text="Remove Image"
-            (onClick)="onRemoveTripImage()"
-          ></dx-button>
-        </div>
-        <div class="d-flex flex-column flex-grow-1 gap-2">
-          <dx-text-box label="*Name" labelMode="floating" [(value)]="trip.name">
-            <dx-validator>
-              <dxi-validation-rule
-                type="required"
-                message="This field is required"
-              ></dxi-validation-rule>
-            </dx-validator>
-          </dx-text-box>
-          <dx-text-box
-            label="*Location"
-            labelMode="floating"
-            [(value)]="trip.location"
-          >
-            <dx-validator>
-              <dxi-validation-rule
-                type="required"
-                message="This field is required"
-              ></dxi-validation-rule>
-            </dx-validator>
-          </dx-text-box>
-        </div>
-      </div>
-      <dx-button
-        class="button-primary"
-        text="Create A New Trip"
-        [useSubmitBehavior]="true"
-      ></dx-button>
-    </form>
-  </div>
-</dx-popup>
-
-<dx-popup
-  *ngIf="showAlbumPopup"
-  width="25vw"
-  height="20vh"
-  [(visible)]="showAlbumPopup"
-  [showTitle]="false"
-  [showCloseButton]="false"
-  [closeOnOutsideClick]="true"
-  [dragEnabled]="false"
->
-  <div *dxTemplate="let date of 'content'">
-    <form
-      class="d-flex flex-column justify-content-between h-100"
-      (submit)="onAddNewAlbum($event)"
-    >
-      <dx-text-box label="*Name" labelMode="floating" [(value)]="albumName">
-        <dx-validator>
-          <dxi-validation-rule
-            type="required"
-            message="This field is required"
-          ></dxi-validation-rule>
-        </dx-validator>
-      </dx-text-box>
-      <dx-button
-        class="button-primary rounded-3"
-        text="SAVE"
-        [useSubmitBehavior]="true"
-      ></dx-button>
-    </form>
-  </div>
-</dx-popup>

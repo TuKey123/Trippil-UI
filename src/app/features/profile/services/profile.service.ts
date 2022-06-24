@@ -65,4 +65,12 @@ export class ProfileService {
   public updateProfile(user: User): Observable<User> {
     return this._apiService.update<User>(`users/me/profile/`, user);
   }
+
+  public createTrip(trip: Trip): Observable<Trip> {
+    return this._apiService.post<Trip>(`trips/`, trip);
+  }
+
+  public removeTrip(id: number): Observable<number> {
+    return this._apiService.delete<number>(`trips/${id}`);
+  }
 }

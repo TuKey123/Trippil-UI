@@ -7,6 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ItemDetailsComponent } from './components/item-details/item-details.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { FormsModule } from '@angular/forms';
+import { TripDetailService } from './services';
 
 @NgModule({
   declarations: [DetailsComponent, ItemDetailsComponent],
@@ -23,5 +24,6 @@ import { FormsModule } from '@angular/forms';
       },
     ]),
   ],
+  providers: [TripDetailService],
 })
 export class TripModule {}

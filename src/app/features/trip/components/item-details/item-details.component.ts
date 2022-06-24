@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { Editor, Toolbar } from 'ngx-editor';
 import { finalize, map } from 'rxjs';
+import { TripItem } from 'src/app/core/models/trip';
 import { AppLoadingService, UploadFileService } from 'src/app/core/services';
 import { TAB_ITEMS } from '../../constants';
-import { TripItem } from '../../interfaces';
 
 @Component({
   selector: 'app-item-details',
@@ -74,11 +74,11 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe((data) => {
         if (!data) return;
-        this.data.imageUrl = data.image;
+        this.data.image = data.image;
       });
   }
 
   public onRemoveImage(): void {
-    this.data.imageUrl = '';
+    this.data.image = '';
   }
 }

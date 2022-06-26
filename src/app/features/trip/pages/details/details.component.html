@@ -1,149 +1,166 @@
-<section class="trip-container d-flex flex-column gap-2 p-2">
-  <section class="d-flex flex-grow-1">
-    <!-- SIDEBAR -->
+<ng-container *ngIf="userProfile$ | async as userProfile">
+  <section class="trip-container d-flex flex-column gap-2 p-2">
+    <section class="d-flex flex-grow-1">
+      <!-- SIDEBAR -->
+      <div
+        *ngIf="tripDetail"
+        class="sidebar d-flex flex-column gap-2 p-3 border bg-white radius shadow-sm"
+      >
+        <div class="d-flex justify-content-between align-items-center">
+          <dx-text-box
+            class="trip-name"
+            [disabled]="tripDetail.owner.id !== userProfile.id"
+            [(value)]="tripDetail.name"
+          ></dx-text-box>
+          <dx-button
+            *ngIf="tripDetail.owner.id === userProfile.id"
+            class="button-primary"
+            text="Save Changes"
+            (onClick)="onSaveChanges()"
+          ></dx-button>
+        </div>
+        <div class="position-relative">
+          <input
+            #imageFile
+            type="file"
+            class="d-none"
+            accept="image/png, image/jpeg"
+            (change)="onFileSelect($event)"
+          />
+          <img
+            width="100%"
+            height="200"
+            class="radius"
+            [src]="tripDetail?.image || 'assets/no-image.png'"
+          />
+          <dx-drop-down-button
+            *ngIf="tripDetail.owner.id === userProfile.id"
+            class="position-absolute text-white dropdown-button"
+            icon="overflow"
+            stylingMode="text"
+            [showArrowIcon]="false"
+            [dropDownOptions]="{ width: 190 }"
+          >
+            <dxi-item>
+              <div *dxTemplate (click)="imageFile.click()">
+                <span> Upload image </span>
+              </div>
+            </dxi-item>
+            <dxi-item>
+              <div
+                *dxTemplate
+                class="remove-image"
+                (click)="tripDetail.image = ''"
+              >
+                <span class="text-white"> Remove image </span>
+              </div>
+            </dxi-item>
+          </dx-drop-down-button>
+        </div>
+
+        <dx-text-area
+          height="185"
+          label="Description"
+          labelMode="floating"
+          class="flex-grow-1"
+          [disabled]="tripDetail.owner.id !== userProfile.id"
+          [(value)]="tripDetail.description"
+        ></dx-text-area>
+        <div class="d-flex gap-2 justify-content-between">
+          <dx-date-box
+            type="datetime"
+            label="*Start date"
+            labelMode="floating"
+            [disabled]="tripDetail.owner.id !== userProfile.id"
+            [(value)]="tripDetail.startDate"
+          >
+            <dxi-validation-rule
+              type="required"
+              message="Start date is required"
+            ></dxi-validation-rule>
+          </dx-date-box>
+          <dx-date-box
+            type="datetime"
+            label="*End date"
+            labelMode="floating"
+            [disabled]="tripDetail.owner.id !== userProfile.id"
+            [(value)]="tripDetail.endDate"
+          >
+            <dxi-validation-rule
+              type="required"
+              message="End date is required"
+            ></dxi-validation-rule
+          ></dx-date-box>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content d-flex flex-column flex-grow-1 ps-2 gap-2">
+        <div
+          id="map"
+          class="flex-grow-1 bg-white shadow-sm border radius position-relative"
+        >
+          <dx-button
+            *ngIf="tripDetail.owner.id === userProfile.id"
+            text="Add new item"
+            class="map-btn_add button-primary position-absolute top-0 end-0"
+            (onClick)="onAddNewItem()"
+          ></dx-button>
+        </div>
+      </div>
+    </section>
+
     <div
       *ngIf="tripDetail"
-      class="sidebar d-flex flex-column gap-2 p-3 border bg-white radius shadow-sm"
+      class="pathway radius bg-white border shadow-sm p-2"
     >
-      <div class="d-flex justify-content-between align-items-center">
-        <dx-text-box
-          class="trip-name"
-          [(value)]="tripDetail.name"
-        ></dx-text-box>
-        <dx-button
-          class="button-primary"
-          text="Save Changes"
-          (onClick)="onSaveChanges()"
-        ></dx-button>
-      </div>
-      <div class="position-relative">
-        <input
-          #imageFile
-          type="file"
-          class="d-none"
-          accept="image/png, image/jpeg"
-          (change)="onFileSelect($event)"
-        />
-        <img
-          width="100%"
-          height="200"
-          class="radius"
-          [src]="tripDetail?.image || 'assets/no-image.png'"
-        />
-        <dx-drop-down-button
-          class="position-absolute text-white dropdown-button"
-          icon="overflow"
-          stylingMode="text"
-          [showArrowIcon]="false"
-          [dropDownOptions]="{ width: 190 }"
-        >
-          <dxi-item>
-            <div *dxTemplate (click)="imageFile.click()">
-              <span> Upload image </span>
+      <dx-scroll-view direction="horizontal" showScrollbar="always">
+        <ng-container *ngFor="let item of tripDetail.items; let index = index">
+          <div
+            class="item-card border bg-white radius d-flex flex-column gap-1 p-1"
+            (click)="onSelectItem(item)"
+          >
+            <img
+              [src]="item?.image || 'assets/no-image.png'"
+              class="item-image radius"
+              height="100"
+            />
+            <div class="d-flex gap-1 justify-content-between">
+              <div class="item-name">{{ item?.location }}</div>
+              <i
+                *ngIf="userProfile.id === tripDetail.owner.id"
+                class="dx-icon-trash fs-5 text-danger cursor-pointer"
+                (click)="$event.stopPropagation(); onRemoveItem(item)"
+              >
+              </i>
             </div>
-          </dxi-item>
-          <dxi-item>
-            <div
-              *dxTemplate
-              class="remove-image"
-              (click)="tripDetail.image = ''"
-            >
-              <span class="text-white"> Remove image </span>
-            </div>
-          </dxi-item>
-        </dx-drop-down-button>
-      </div>
-
-      <dx-text-area
-        height="185"
-        label="Description"
-        labelMode="floating"
-        class="flex-grow-1"
-        [(value)]="tripDetail.description"
-      ></dx-text-area>
-      <div class="d-flex gap-2 justify-content-between">
-        <dx-date-box
-          type="datetime"
-          label="*Start date"
-          labelMode="floating"
-          [(value)]="tripDetail.startDate"
-        >
-          <dxi-validation-rule
-            type="required"
-            message="Start date is required"
-          ></dxi-validation-rule>
-        </dx-date-box>
-        <dx-date-box
-          type="datetime"
-          label="*End date"
-          labelMode="floating"
-          [(value)]="tripDetail.endDate"
-        >
-          <dxi-validation-rule
-            type="required"
-            message="End date is required"
-          ></dxi-validation-rule
-        ></dx-date-box>
-      </div>
-    </div>
-
-    <!-- CONTENT -->
-    <div class="content d-flex flex-column flex-grow-1 ps-2 gap-2">
-      <div
-        id="map"
-        class="flex-grow-1 bg-white shadow-sm border radius position-relative"
-      >
-        <dx-button
-          text="Add new item"
-          class="map-btn_add button-primary position-absolute top-0 end-0"
-          (onClick)="onAddNewItem()"
-        ></dx-button>
-      </div>
+          </div>
+        </ng-container>
+      </dx-scroll-view>
     </div>
   </section>
 
-  <div *ngIf="tripDetail" class="pathway radius bg-white border shadow-sm p-2">
-    <dx-scroll-view direction="horizontal" showScrollbar="always">
-      <ng-container *ngFor="let item of tripDetail.items; let index = index">
-        <div
-          class="item-card border bg-white radius d-flex flex-column gap-1 p-1"
-          (click)="showPopupDetails = true; selectedItem = item"
-        >
-          <img
-            [src]="item?.image || 'assets/no-image.png'"
-            class="item-image radius"
-            height="100"
-          />
-          <div class="d-flex gap-1 justify-content-between">
-            <div class="item-name">{{ item?.location }}</div>
-            <i
-              class="dx-icon-trash fs-5 text-danger cursor-pointer"
-              (click)="$event.stopPropagation(); onRemoveItem(item)"
-            >
-            </i>
-          </div>
-        </div>
-      </ng-container>
-    </dx-scroll-view>
-  </div>
-</section>
-
-<dx-popup
-  title="Details"
-  width="70vw"
-  height="65vh"
-  [(visible)]="showPopupDetails"
-  [showTitle]="false"
-  [showCloseButton]="false"
-  [closeOnOutsideClick]="true"
-  [dragEnabled]="false"
-  [wrapperAttr]="{ class: 'item-details-popup' }"
->
+  <dx-popup
+    title="Details"
+    width="70vw"
+    height="65vh"
+    [(visible)]="showPopupDetails"
+    [showTitle]="false"
+    [showCloseButton]="false"
+    [closeOnOutsideClick]="true"
+    [dragEnabled]="false"
+    [wrapperAttr]="{ class: 'item-details-popup' }"
   >
-  <div *dxTemplate="let data of 'content'">
-    <app-item-details
-      [itemDetail]="selectedItem"
-      (saveChangesEmit)="onItemSaveChanges($event)"
-    ></app-item-details>
-  </div>
-</dx-popup>
+    >
+    <div *dxTemplate="let data of 'content'">
+      <app-item-details
+        [itemDetail]="selectedItem"
+        [usersShared]="usersSharedItem"
+        [canEdit]="userProfile.id === tripDetail.owner.id"
+        (saveChangesEmit)="onItemSaveChanges($event)"
+        (shareEmit)="onItemShare($event)"
+        (likeEmit)="onItemLike($event)"
+      ></app-item-details>
+    </div>
+  </dx-popup>
+</ng-container>

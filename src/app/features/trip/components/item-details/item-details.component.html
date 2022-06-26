@@ -17,11 +17,21 @@
       </dxi-item>
       <dxi-item location="after">
         <div *dxTemplate>
-          <dx-button
-            class="button-primary"
-            text="Save Changes"
-            (onClick)="onSave()"
-          ></dx-button>
+          <div class="d-flex gap-2">
+            <dx-button
+              *ngIf="canEdit"
+              class="button-primary"
+              text="Save Changes"
+              (onClick)="onSave()"
+            ></dx-button>
+            <dx-button
+              *ngIf="canEdit"
+              class="button-primary"
+              icon="share"
+              text="{{ data.isShared ? 'Unshare' : 'Share' }}"
+              (onClick)="onShare()"
+            ></dx-button>
+          </div>
         </div>
       </dxi-item>
     </dx-toolbar>
@@ -29,7 +39,19 @@
       <div class="tab-content d-flex flex-column gap-2 flex-grow-1 p-4">
         <ng-container [ngSwitch]="activatedTab">
           <ng-container *ngSwitchCase="0">
-            <h3>{{ data?.location }}</h3>
+            <div
+              class="d-flex justify-content-between gap-1 align-items-center"
+            >
+              <h3>{{ data?.location }}</h3>
+              <div class="d-flex gap-1">
+                <div>{{ data.numberOfLikes }}</div>
+                <i
+                  class="dx-icon-like"
+                  [ngClass]="[data.isLiked ? 'text-primary' : ' text-gray']"
+                  (click)="onLike()"
+                ></i>
+              </div>
+            </div>
             <div class="position-relative">
               <input
                 #imageFile
@@ -45,6 +67,7 @@
                 [src]="data?.image || 'assets/no-image.png'"
               />
               <dx-drop-down-button
+                *ngIf="canEdit"
                 class="position-absolute text-white dropdown-button"
                 icon="overflow"
                 stylingMode="text"
@@ -71,6 +94,7 @@
               height="185"
               label="Description"
               labelMode="floating"
+              [disabled]="!canEdit"
               [(value)]="data.description"
             ></dx-text-area>
             <div class="d-flex gap-2 justify-content-between">
@@ -79,6 +103,7 @@
                   type="datetime"
                   label="*Start date"
                   labelMode="floating"
+                  [disabled]="!canEdit"
                   [(value)]="data.startDate"
                 >
                   <dxi-validation-rule
@@ -90,6 +115,7 @@
                   type="datetime"
                   label="*End date"
                   labelMode="floating"
+                  [disabled]="!canEdit"
                   [(value)]="data.endDate"
                 >
                   <dxi-validation-rule
@@ -101,7 +127,36 @@
               <div
                 class="users d-flex align-items-center p-2 gap-1 justify-content-end"
               >
-                <div class="user-recommended rounded-circle bg-secondary"></div>
+                <ng-container
+                  *ngFor="let user of usersShared.slice(0, 5); let i = index"
+                >
+                  <ng-container [ngSwitch]="i">
+                    <div
+                      *ngSwitchCase="4"
+                      class="user-recommended rounded-circle d-flex justify-content-center align-items-center bg-secondary"
+                      [ngStyle]="{
+                        transform:
+                          'translateX(' +
+                          10 * (usersShared.length - 1 - i) +
+                          'px)'
+                      }"
+                    >
+                      +{{ usersShared.length - 4 }}
+                    </div>
+                    <img
+                      *ngSwitchDefault
+                      class="user-recommended rounded-circle"
+                      [src]="user.image"
+                      [ngStyle]="{
+                        transform:
+                          'translateX(' +
+                          10 * (usersShared.length - 1 - i) +
+                          'px)'
+                      }"
+                      (click)="showUsersSharedPopup = true"
+                    />
+                  </ng-container>
+                </ng-container>
               </div>
             </div>
           </ng-container>
@@ -111,6 +166,7 @@
             <ngx-editor
               placeholder="Type here..."
               [editor]="editor"
+              [disabled]="!canEdit"
               [(ngModel)]="data.note"
             ></ngx-editor>
           </ng-container>
@@ -119,3 +175,41 @@
     </dx-scroll-view>
   </div>
 </section>
+
+<dx-popup
+  width="25vw"
+  height="auto"
+  maxHeight="40vh"
+  [(visible)]="showUsersSharedPopup"
+  [showTitle]="false"
+  [showCloseButton]="false"
+  [closeOnOutsideClick]="true"
+  [dragEnabled]="false"
+  [wrapperAttr]="{ class: 'users-shared-popup' }"
+>
+  >
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view [scrollByContent]="true" [scrollByThumb]="true">
+      <div class="d-flex flex-column gap-2">
+        <ng-container *ngFor="let user of usersShared">
+          <div class="d-flex gap-1 align-items-center justify-content-center">
+            <img
+              class="user-recommended rounded-circle"
+              width="40"
+              height="40"
+              [src]="user.image"
+            />
+            <div class="fs-6">
+              {{ user.firstName + " " + user.lastName }}
+            </div>
+            <div class="fs-6">({{ user.email }})</div>
+            <div class="fs-6 ms-auto d-flex gap-1 align-items-center">
+              <div>{{ user.numberOfLikes }}</div>
+              <i class="dx-icon-like text-primary"></i>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

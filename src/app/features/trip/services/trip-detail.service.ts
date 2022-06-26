@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Trip, TripDetail, TripItem } from 'src/app/core/models/trip';
+import { TripDetail, TripItem } from 'src/app/core/models/trip';
+import { User } from 'src/app/core/models/user';
 import { ApiService } from 'src/app/core/services';
 
 @Injectable()
@@ -18,7 +19,10 @@ export class TripDetailService {
   }
 
   public addTripItem(
-    tripItem: Omit<TripItem, 'id' | 'image' | 'note' | 'description' | 'marker'>
+    tripItem: Omit<
+      TripItem,
+      'id' | 'image' | 'note' | 'description' | 'marker' | 'isShared'
+    >
   ): Observable<Omit<TripItem, 'marker'>> {
     return this._apiService.post(`items/`, tripItem);
   }
@@ -28,8 +32,22 @@ export class TripDetailService {
   }
 
   public updateTripItem(
-    tripItem: Omit<TripItem, 'marker'>
+    tripItem: Omit<TripItem, 'marker' | 'isShared'>
   ): Observable<Omit<TripItem, 'marker'>> {
     return this._apiService.update(`items/${tripItem.id}/`, tripItem);
+  }
+
+  public shareItem(itemId: number, isShared: boolean): Observable<any> {
+    return this._apiService.update(`items/${itemId}/share/`, { isShared });
+  }
+
+  public usersSharedItem(
+    itemId: number
+  ): Observable<(User & { numberOfLikes: number })[]> {
+    return this._apiService.get(`items/${itemId}/users_shared/`);
+  }
+
+  public likeItem(itemId: number): Observable<any> {
+    return this._apiService.update(`items/${itemId}/like/`, {});
   }
 }

@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments';
-import { AppLoadingService, UploadFileService } from 'src/app/core/services';
+import {
+  AppLoadingService,
+  AuthService,
+  UploadFileService,
+} from 'src/app/core/services';
 import { map, finalize, filter } from 'rxjs';
 import { TripDetailService } from '../../services';
 import { ActivatedRoute } from '@angular/router';
 import { TripDetail, TripItem } from 'src/app/core/models/trip';
+import { User } from 'src/app/core/models/user';
 import * as mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
@@ -20,26 +25,30 @@ export class DetailsComponent implements OnInit {
 
   public showPopupDetails = false;
   public selectedItem!: TripItem;
+  public usersSharedItem!: (User & { numberOfLikes?: number })[];
 
   public id = Number(this._route.snapshot.paramMap.get('id'));
 
   public tripDetail!: TripDetail;
 
+  public userProfile$ = this._authService.userProfile$;
+
   constructor(
     private _appLoadingService: AppLoadingService,
     private _uploadFileService: UploadFileService,
     private _tripDetailService: TripDetailService,
+    private _authService: AuthService,
     private _route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this._initMap();
-    this._initAutoComplete();
+    // this._initMap();
+    // this._initAutoComplete();
 
     this._tripDetailService.getTripDetail(this.id).subscribe((data) => {
       this.tripDetail = data;
 
-      this._initItemMarkers();
+      // this._initItemMarkers();
     });
   }
 
@@ -51,7 +60,7 @@ export class DetailsComponent implements OnInit {
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v9?optimize=true',
       center: [108.08333, 16.08333],
-      zoom: 8,
+      minZoom: 3,
     });
 
     this.map.on('load', () => {
@@ -88,6 +97,21 @@ export class DetailsComponent implements OnInit {
     }));
 
     this.tripDetail = { ...this.tripDetail, items: items };
+  }
+
+  public onSelectItem(item: TripItem): void {
+    this._appLoadingService.show();
+
+    this._tripDetailService
+      .usersSharedItem(item.id)
+      .pipe(finalize(() => this._appLoadingService.hide()))
+      .subscribe((users) => {
+        this.showPopupDetails = true;
+        this.selectedItem = item;
+        this.usersSharedItem = users.sort((previous, current) =>
+          current.numberOfLikes > previous.numberOfLikes ? 1 : -1
+        );
+      });
   }
 
   public onAddNewItem(): void {
@@ -174,6 +198,30 @@ export class DetailsComponent implements OnInit {
           items: items,
         };
       });
+  }
+
+  public onItemShare(item: TripItem): void {
+    this._tripDetailService.shareItem(item.id, item.isShared).subscribe(() => {
+      const items = this.tripDetail.items.map((data) => {
+        if (data.id !== item.id) return data;
+
+        return item;
+      });
+
+      this.tripDetail = { ...this.tripDetail, items };
+    });
+  }
+
+  public onItemLike(item: TripItem): void {
+    this._tripDetailService.likeItem(item.id).subscribe(() => {
+      const items = this.tripDetail.items.map((data) => {
+        if (data.id !== item.id) return data;
+
+        return item;
+      });
+
+      this.tripDetail = { ...this.tripDetail, items };
+    });
   }
 
   public onFileSelect(event: any): void {

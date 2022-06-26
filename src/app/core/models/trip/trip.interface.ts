@@ -20,6 +20,9 @@ export interface TripDetail {
   startDate: Date | string | number;
   endDate: Date | string | number;
   items: TripItem[];
+  owner: {
+    id: number;
+  };
 }
 
 export interface TripItem {
@@ -34,4 +37,7 @@ export interface TripItem {
   trip: number;
   note: any;
   description: string;
+  isShared: boolean;
+  isLiked?: boolean;
+  numberOfLikes?: number;
 }

@@ -29,6 +29,17 @@
       font-size: 30px;
       width: max-content;
     }
+
+    .dx-icon-like {
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+::ng-deep.users-shared-popup {
+  .dx-popup-normal {
+    border-radius: 20px;
   }
 }
 
@@ -37,7 +48,7 @@
 }
 
 .item-image {
-  object-fit: cover;
+  object-fit: contain;
   background-color: var(--bs-gray-300);
 }
 
@@ -47,6 +58,8 @@
 }
 
 .user-recommended {
+  object-fit: cover;
+  cursor: pointer;
   width: 30px;
   height: 30px;
 }

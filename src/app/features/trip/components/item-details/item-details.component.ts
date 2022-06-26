@@ -9,6 +9,7 @@ import {
 import { Editor, Toolbar } from 'ngx-editor';
 import { filter, finalize, map } from 'rxjs';
 import { TripItem } from 'src/app/core/models/trip';
+import { User } from 'src/app/core/models/user';
 import { AppLoadingService, UploadFileService } from 'src/app/core/services';
 import { TAB_ITEMS } from '../../constants';
 
@@ -21,14 +22,19 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
   @Input() set itemDetail(value: TripItem) {
     this.data = { ...value };
   }
+  @Input() usersShared!: (User & { numberOfLikes?: number })[];
+  @Input() canEdit!: boolean;
 
   @Output() saveChangesEmit = new EventEmitter();
+  @Output() shareEmit = new EventEmitter();
+  @Output() likeEmit = new EventEmitter();
 
   public tabItems = TAB_ITEMS;
 
   public data!: TripItem;
 
-  public activatedTab = 0;
+  public activatedTab!: number;
+  public showUsersSharedPopup = false;
 
   public editor: Editor = new Editor();
   public toolbar: Toolbar = [
@@ -47,7 +53,9 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
     private _uploadFileService: UploadFileService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.activatedTab = 0;
+  }
 
   ngOnDestroy(): void {
     this.editor.destroy();
@@ -55,6 +63,20 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
 
   public onSave(): void {
     this.saveChangesEmit.emit(this.data);
+  }
+
+  public onShare(): void {
+    this.data.isShared = !this.data.isShared;
+    this.shareEmit.emit(this.data);
+  }
+
+  public onLike(): void {
+    this.data.isLiked = !this.data.isLiked;
+
+    this.data.numberOfLikes =
+      (this.data.numberOfLikes as number) + (this.data.isLiked ? 1 : -1);
+
+    this.likeEmit.emit(this.data);
   }
 
   public onFileSelect(event: any): void {

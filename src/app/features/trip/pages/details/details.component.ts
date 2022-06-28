@@ -10,6 +10,7 @@ import { TripDetailService } from '../../services';
 import { ActivatedRoute } from '@angular/router';
 import { TripDetail, TripItem } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as mapboxgl from 'mapbox-gl';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
@@ -19,17 +20,21 @@ import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
   styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
+  public id = Number(this._route.snapshot.paramMap.get('id'));
+
   public map!: mapboxgl.Map;
   public geocoder!: MapboxGeocoder;
   public searchResult!: any;
 
+  public userProfile!: User;
+  public tripDetail!: TripDetail;
+
   public showPopupDetails = false;
   public selectedItem!: TripItem;
-  public usersSharedItem!: (User & { numberOfLikes?: number })[];
-
-  public id = Number(this._route.snapshot.paramMap.get('id'));
-
-  public tripDetail!: TripDetail;
+  public usersSharedItem!: (User & {
+    numberOfLikes?: number;
+    itemId?: number;
+  })[];
 
   public userProfile$ = this._authService.userProfile$;
 
@@ -42,14 +47,17 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this._initMap();
-    // this._initAutoComplete();
-
     this._tripDetailService.getTripDetail(this.id).subscribe((data) => {
       this.tripDetail = data;
 
-      // this._initItemMarkers();
+      setTimeout(() => {
+        this._initMap();
+        this._initAutoComplete();
+        this._initItemMarkers();
+      }, 0);
     });
+
+    this.userProfile$.subscribe((data) => (this.userProfile = data));
   }
 
   private _initMap(): void {
@@ -89,12 +97,25 @@ export class DetailsComponent implements OnInit {
   }
 
   private _initItemMarkers(): void {
-    const items = this.tripDetail.items?.map((item) => ({
-      ...item,
-      marker: new mapboxgl.Marker()
+    const items = this.tripDetail.items?.map((item) => {
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        maxWidth: '60px',
+      })
+        .setText(item.ordinal.toString())
+        .addTo(this.map);
+
+      const marker = new mapboxgl.Marker()
         .setLngLat([item.lng, item.lat])
-        .addTo(this.map),
-    }));
+        .addTo(this.map)
+        .setPopup(popup);
+
+      return {
+        ...item,
+        marker,
+      };
+    });
 
     this.tripDetail = { ...this.tripDetail, items: items };
   }
@@ -126,13 +147,25 @@ export class DetailsComponent implements OnInit {
         startDate: new Date().toISOString(),
         endDate: new Date().toISOString(),
       })
-      .pipe(finalize(() => this._appLoadingService.hide()))
+      .pipe(
+        finalize(() => {
+          this._appLoadingService.hide();
+          this.geocoder.clear();
+        })
+      )
       .subscribe((item) => {
-        this.geocoder.clear();
+        const popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          maxWidth: '60px',
+        })
+          .setText(item.ordinal.toString())
+          .addTo(this.map);
 
         const marker = new mapboxgl.Marker()
           .setLngLat(this.searchResult.center)
-          .addTo(this.map);
+          .addTo(this.map)
+          .setPopup(popup);
 
         this.tripDetail = {
           ...this.tripDetail,
@@ -236,5 +269,25 @@ export class DetailsComponent implements OnInit {
         finalize(() => this._appLoadingService.hide())
       )
       .subscribe((data) => (this.tripDetail.image = data.image));
+  }
+
+  public drop(event: CdkDragDrop<string[]> | any): void {
+    const item = this.tripDetail.items[event.previousIndex];
+    moveItemInArray(
+      this.tripDetail.items,
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    this._tripDetailService
+      .updateItemOrdinal(item.id, event.currentIndex)
+      .subscribe(() => {
+        this.tripDetail.items.forEach((item, index) => {
+          item.marker?.remove();
+          item.ordinal = index;
+        });
+
+        this._initItemMarkers();
+      });
   }
 }

@@ -11,18 +11,18 @@ import { filter, finalize, map } from 'rxjs';
 import { TripItem } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
 import { AppLoadingService, UploadFileService } from 'src/app/core/services';
-import { TAB_ITEMS } from '../../constants';
+import { TAB_ITEMS } from 'src/app/features/trip/constants';
 
 @Component({
-  selector: 'app-item-details',
-  templateUrl: './item-details.component.html',
-  styleUrls: ['./item-details.component.scss'],
+  selector: 'app-item',
+  templateUrl: './item.component.html',
+  styleUrls: ['./item.component.scss'],
 })
-export class ItemDetailsComponent implements OnInit, OnDestroy {
+export class ItemComponent implements OnInit, OnDestroy {
   @Input() set itemDetail(value: TripItem) {
     this.data = { ...value };
   }
-  @Input() usersShared!: (User & { numberOfLikes?: number })[];
+  @Input() usersShared!: (User & { numberOfLikes?: number; itemId?: number })[];
   @Input() canEdit!: boolean;
 
   @Output() saveChangesEmit = new EventEmitter();

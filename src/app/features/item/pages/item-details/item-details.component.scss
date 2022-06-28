@@ -1,0 +1,17 @@
+:host {
+  ::ng-deep {
+    app-item .profile-tab {
+      border: none;
+      background-color: white;
+    }
+  }
+}
+
+.item-details-container {
+  padding: 40px;
+  height: calc(100vh - 70px);
+}
+
+.user-avatar {
+  object-fit: cover;
+}

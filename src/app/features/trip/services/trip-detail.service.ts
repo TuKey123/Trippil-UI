@@ -4,7 +4,9 @@ import { TripDetail, TripItem } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
 import { ApiService } from 'src/app/core/services';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class TripDetailService {
   constructor(private _apiService: ApiService) {}
 
@@ -21,7 +23,13 @@ export class TripDetailService {
   public addTripItem(
     tripItem: Omit<
       TripItem,
-      'id' | 'image' | 'note' | 'description' | 'marker' | 'isShared'
+      | 'id'
+      | 'image'
+      | 'note'
+      | 'description'
+      | 'marker'
+      | 'isShared'
+      | 'ordinal'
     >
   ): Observable<Omit<TripItem, 'marker'>> {
     return this._apiService.post(`items/`, tripItem);
@@ -32,7 +40,7 @@ export class TripDetailService {
   }
 
   public updateTripItem(
-    tripItem: Omit<TripItem, 'marker' | 'isShared'>
+    tripItem: Omit<TripItem, 'ordinal' | 'marker' | 'isShared'>
   ): Observable<Omit<TripItem, 'marker'>> {
     return this._apiService.update(`items/${tripItem.id}/`, tripItem);
   }
@@ -43,11 +51,17 @@ export class TripDetailService {
 
   public usersSharedItem(
     itemId: number
-  ): Observable<(User & { numberOfLikes: number })[]> {
+  ): Observable<(User & { numberOfLikes: number; itemId: number })[]> {
     return this._apiService.get(`items/${itemId}/users_shared/`);
   }
 
   public likeItem(itemId: number): Observable<any> {
     return this._apiService.update(`items/${itemId}/like/`, {});
+  }
+
+  public updateItemOrdinal(itemId: number, ordinal: number): Observable<any> {
+    return this._apiService.update(`items/${itemId}/update_ordinal/`, {
+      ordinal,
+    });
   }
 }

@@ -40,4 +40,5 @@ export interface TripItem {
   isShared: boolean;
   isLiked?: boolean;
   numberOfLikes?: number;
+  ordinal: number;
 }

@@ -1,9 +1,11 @@
-<ng-container *ngIf="userProfile$ | async as userProfile">
-  <section class="trip-container d-flex flex-column gap-2 p-2">
+<ng-container>
+  <section
+    *ngIf="tripDetail"
+    class="trip-container d-flex flex-column gap-2 p-2"
+  >
     <section class="d-flex flex-grow-1">
       <!-- SIDEBAR -->
       <div
-        *ngIf="tripDetail"
         class="sidebar d-flex flex-column gap-2 p-3 border bg-white radius shadow-sm"
       >
         <div class="d-flex justify-content-between align-items-center">
@@ -110,13 +112,18 @@
       </div>
     </section>
 
-    <div
-      *ngIf="tripDetail"
-      class="pathway radius bg-white border shadow-sm p-2"
-    >
-      <dx-scroll-view direction="horizontal" showScrollbar="always">
+    <div class="pathway radius bg-white border shadow-sm p-2">
+      <dx-scroll-view
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        class="items-list"
+        direction="horizontal"
+        showScrollbar="always"
+        (cdkDropListDropped)="drop($event)"
+      >
         <ng-container *ngFor="let item of tripDetail.items; let index = index">
           <div
+            cdkDrag
             class="item-card border bg-white radius d-flex flex-column gap-1 p-1"
             (click)="onSelectItem(item)"
           >
@@ -153,14 +160,14 @@
   >
     >
     <div *dxTemplate="let data of 'content'">
-      <app-item-details
+      <app-item
         [itemDetail]="selectedItem"
         [usersShared]="usersSharedItem"
         [canEdit]="userProfile.id === tripDetail.owner.id"
         (saveChangesEmit)="onItemSaveChanges($event)"
         (shareEmit)="onItemShare($event)"
         (likeEmit)="onItemLike($event)"
-      ></app-item-details>
+      ></app-item>
     </div>
   </dx-popup>
 </ng-container>

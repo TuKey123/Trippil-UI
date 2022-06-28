@@ -1,0 +1,25 @@
+<ng-container *ngIf="itemDetail && usersSharedItem">
+  <section class="item-details-container bg-white d-flex flex-column">
+    <div class="d-flex gap-3 border-bottom py-2">
+      <img
+        width="50"
+        height="50"
+        class="user-avatar rounded-circle"
+        [src]="owner.image || 'assets/no-image.png'"
+      />
+      <div>
+        <div>{{ owner.firstName + " " + owner.lastName }}</div>
+        <div>{{ owner.email }}</div>
+      </div>
+    </div>
+    <app-item
+      class="mt-3"
+      [canEdit]="(userProfile$ | async)?.id === itemDetail.ownerId"
+      [itemDetail]="itemDetail"
+      [usersShared]="usersSharedItem"
+      (saveChangesEmit)="onItemSaveChanges($event)"
+      (shareEmit)="onItemShare($event)"
+      (likeEmit)="onItemLike($event)"
+    ></app-item>
+  </section>
+</ng-container>

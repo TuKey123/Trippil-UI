@@ -29,6 +29,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'items',
+    component: NavigationBaseComponent,
+    loadChildren: () =>
+      import('./features/item/item.module').then((m) => m.ItemModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'trips',
     component: NavigationBaseComponent,
     loadChildren: () =>

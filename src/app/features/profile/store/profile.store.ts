@@ -56,6 +56,13 @@ export class ProfileStore {
     this._userProfile$.next(userProfile);
   }
 
+  public updateUserProfileLikes(increase: boolean): void {
+    const userPofile = this._userProfile$.value;
+    userPofile.numberOfLikes = userPofile.numberOfLikes + (increase ? 1 : -1);
+
+    this._userProfile$.next(userPofile);
+  }
+
   public setTripsStore(trips: Trip[]): void {
     this._trips$.next(trips);
   }

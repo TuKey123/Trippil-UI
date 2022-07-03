@@ -5,6 +5,17 @@
     </div>
   </dxi-item>
   <dxi-item location="after">
+    <div *dxTemplate>
+      <div
+        class="explore cursor-pointer me-3"
+        routerLinkActive="link-active"
+        [routerLink]="['/explore']"
+      >
+        Explore
+      </div>
+    </div>
+  </dxi-item>
+  <dxi-item location="after">
     <img
       class="rounded-circle shadow"
       [src]="

@@ -54,6 +54,6 @@ export class TripCardComponent implements OnInit {
     this.trip.numberOfLikes =
       Number(this.trip?.numberOfLikes) + (this.trip.isLiked ? 1 : -1);
 
-    this.likeTripEmitter.emit();
+    this.likeTripEmitter.emit(this.trip.isLiked);
   }
 }

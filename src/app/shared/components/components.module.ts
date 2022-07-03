@@ -10,6 +10,7 @@ import { ItemComponent } from './item/item.component';
 import { FormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
 import { ItemCardComponent } from './item-card/item-card.component';
+import { UserCardComponent } from './user-card/user-card.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ItemCardComponent } from './item-card/item-card.component';
     SidePanelComponent,
     ItemComponent,
     ItemCardComponent,
+    UserCardComponent,
   ],
   imports: [
     CommonModule,
@@ -34,6 +36,7 @@ import { ItemCardComponent } from './item-card/item-card.component';
     SidePanelComponent,
     ItemComponent,
     ItemCardComponent,
+    UserCardComponent,
   ],
 })
 export class ComponentsModule {}

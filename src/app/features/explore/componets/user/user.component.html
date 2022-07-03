@@ -1,0 +1,9 @@
+<section *ngIf="!loading; else appLoading" class="users-container">
+  <ng-container *ngFor="let user of users$ | async">
+    <app-user-card [data]="user"></app-user-card>
+  </ng-container>
+</section>
+
+<ng-template #appLoading>
+  <app-loading></app-loading>
+</ng-template>

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize, map, Subscription, take } from 'rxjs';
+import { filter, finalize, map, take } from 'rxjs';
 import { User } from 'src/app/core/models/user';
-import { AppLoadingService, AuthService } from 'src/app/core/services';
+import {
+  AppLoadingService,
+  AuthService,
+  UploadFileService,
+} from 'src/app/core/services';
 import { ProfileService } from '../../services/profile.service';
 
 @Component({
@@ -15,34 +19,28 @@ export class SettingsComponent implements OnInit {
   constructor(
     private _authService: AuthService,
     private _profileSerivice: ProfileService,
-    private _appLoadingService: AppLoadingService
+    private _appLoadingService: AppLoadingService,
+    private _uploadFileService: UploadFileService
   ) {}
 
   ngOnInit(): void {
     this._authService.userProfile$
       .pipe(take(1))
-      .subscribe((data) => (this.userProfile = data));
+      .subscribe((data) => (this.userProfile = { ...data }));
   }
 
-  public handleFileInput(e: any): void {
+  public handleFileInput(event: any): void {
     this._appLoadingService.show();
 
-    const files = [e.files['0']];
-    this._profileSerivice
-      .uploadAvatar(files)
+    const files = [event.target.files['0']];
+    this._uploadFileService
+      .uploadImage(files)
       .pipe(
-        map((data) => {
-          const res = data as any;
-          return res['body'];
-        }),
+        map((data) => (data as any).body),
+        filter((data) => !!data),
         finalize(() => this._appLoadingService.hide())
       )
-      .subscribe((data) => {
-        if (!data) return;
-
-        this.userProfile.image = data.image;
-        this._authService.setUserProfile(this.userProfile);
-      });
+      .subscribe((data) => (this.userProfile.image = data.image));
   }
 
   public onSubmit(e: any): void {

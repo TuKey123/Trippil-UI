@@ -1,0 +1,24 @@
+<div class="d-flex flex-column bg-light">
+  <div
+    class="d-flex flex-column align-items-center justify-content-center p-2 position-relative"
+  >
+    <img
+      width="150"
+      height="150"
+      class="user-image shadow rounded-circle"
+      [src]="data?.image || 'assets/no-avatar.jpg'"
+    />
+    <div class="description">{{ data.firstName }} {{ data.lastName }}</div>
+    <div class="description">{{ data.email }}</div>
+  </div>
+  <div
+    class="tripill-card round-3 d-flex gap-2 justify-content-between p-2"
+    [routerLink]="detailsLink"
+  >
+    <div class="description">{{ data.trips }} Posted Trips</div>
+    <div class="description d-flex gap-1">
+      {{ data.numberOfLikes }}
+      <i class="text-primary dx-icon-like"></i>
+    </div>
+  </div>
+</div>

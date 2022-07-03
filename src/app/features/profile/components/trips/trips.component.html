@@ -11,7 +11,7 @@
       [showLikeAction]="true"
       (saveAlbumSelectionEmit)="onAlbumSelectionChanged($event)"
       (removeTripEmitter)="onRemoveTrip(trip.id)"
-      (likeTripEmitter)="onTripLike(trip.id)"
+      (likeTripEmitter)="onTripLike(trip.id, $event)"
     ></app-trip-card>
   </ng-container>
 </section>

@@ -1,0 +1,27 @@
+.explore-container {
+  padding: 40px 80px;
+}
+
+.tabs {
+  gap: 20px;
+}
+
+.tab {
+  padding: 10px 30px;
+  border-radius: 20px;
+  background-color: white;
+  border: 1px solid white;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+  }
+}
+
+.tab-active {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary);
+  color: white !important;
+}

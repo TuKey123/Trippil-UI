@@ -42,6 +42,13 @@ const routes: Routes = [
       import('./features/trip/trip.module').then((m) => m.TripModule),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'explore',
+    component: NavigationBaseComponent,
+    loadChildren: () =>
+      import('./features/explore/explore.module').then((m) => m.ExploreModule),
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({

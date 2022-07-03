@@ -88,8 +88,10 @@ export class TripsComponent implements OnInit {
     };
   }
 
-  public onTripLike(tripId: number): void {
-    this._profileService.likeTrip(tripId).subscribe();
+  public onTripLike(tripId: number, isLiked: boolean): void {
+    this._profileService
+      .likeTrip(tripId)
+      .subscribe(() => this._profileStore.updateUserProfileLikes(isLiked));
   }
 
   public onPopupClose(): void {

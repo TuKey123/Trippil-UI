@@ -1,0 +1,13 @@
+<section *ngIf="!loading; else appLoading" class="trips-container">
+  <ng-container *ngFor="let trip of trips$ | async">
+    <app-trip-card
+      [data]="trip"
+      [showLikeAction]="true"
+      (likeTripEmitter)="onTripLike(trip.id)"
+    ></app-trip-card>
+  </ng-container>
+</section>
+
+<ng-template #appLoading>
+  <app-loading></app-loading>
+</ng-template>

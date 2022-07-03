@@ -28,7 +28,9 @@ export class ItemsSharedComponent implements OnInit {
     });
   }
 
-  public onItemLike(itemId: number): void {
-    this._profileService.likeItem(itemId).subscribe();
+  public onItemLike(itemId: number, isLiked: boolean): void {
+    this._profileService
+      .likeItem(itemId)
+      .subscribe(() => this._profileStore.updateUserProfileLikes(isLiked));
   }
 }

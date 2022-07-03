@@ -1,8 +1,8 @@
 <section *ngIf="!loading; else appLoading" class="items-container">
-  <ng-container *ngFor="let item of itemsShared$ | async">
+  <ng-container *ngFor="let item of items$ | async">
     <app-item-card
       [data]="item"
-      (likeItemEmitter)="onItemLike(item.id, $event)"
+      (likeItemEmitter)="onItemLike(item.id)"
     ></app-item-card>
   </ng-container>
 </section>

@@ -26,6 +26,6 @@ export class ItemCardComponent implements OnInit {
     this.item.numberOfLikes =
       Number(this.item?.numberOfLikes) + (this.item.isLiked ? 1 : -1);
 
-    this.likeItemEmitter.emit();
+    this.likeItemEmitter.emit(this.item.isLiked);
   }
 }

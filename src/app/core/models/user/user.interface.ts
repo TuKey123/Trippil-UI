@@ -8,6 +8,7 @@ export interface User {
   dateJoined: Date;
   trips: number;
   image: string;
+  numberOfLikes?: number;
 }
 
 export interface UserInput {

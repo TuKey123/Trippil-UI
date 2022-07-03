@@ -4,9 +4,13 @@
 >
   <h3 class="p-3">{{ albumDetails?.name }}</h3>
   <dx-scroll-view [scrollByContent]="true" [scrollByThumb]="true">
-    <div class="d-flex gap-2 flex-wrap p-3">
+    <div class="trips-container">
       <ng-container *ngFor="let trip of albumDetails?.trips">
-        <app-trip-card class="flex-grow-1" [data]="trip"></app-trip-card>
+        <app-trip-card
+          [data]="trip"
+          [showLikeAction]="true"
+          (likeTripEmitter)="onLikeTrip(trip.id)"
+        ></app-trip-card>
       </ng-container>
     </div>
   </dx-scroll-view>

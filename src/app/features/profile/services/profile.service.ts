@@ -2,7 +2,7 @@ import { HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Album } from 'src/app/core/models/album';
-import { Trip } from 'src/app/core/models/trip';
+import { Trip, TripItem } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
 import { ApiService } from 'src/app/core/services';
 
@@ -19,6 +19,10 @@ export class ProfileService {
 
   public getAlbums(): Observable<Album[]> {
     return this._apiService.get<Album[]>('albums/');
+  }
+
+  public getItemsShared(userId: number): Observable<TripItem[]> {
+    return this._apiService.get<TripItem[]>(`items/shared/users/${userId}`);
   }
 
   public getUserAlbums(userId: number): Observable<Album[]> {
@@ -72,5 +76,13 @@ export class ProfileService {
 
   public removeTrip(id: number): Observable<number> {
     return this._apiService.delete<number>(`trips/${id}`);
+  }
+
+  public likeTrip(tripId: number): Observable<any> {
+    return this._apiService.update(`trips/${tripId}/like/`, {});
+  }
+
+  public likeItem(itemId: number): Observable<any> {
+    return this._apiService.update(`items/${itemId}/like/`, {});
   }
 }

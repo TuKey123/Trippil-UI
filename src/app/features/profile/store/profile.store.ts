@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Album } from 'src/app/core/models/album';
-import { Trip } from 'src/app/core/models/trip';
+import { Trip, TripItem } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
 
 @Injectable()
@@ -21,6 +21,11 @@ export class ProfileStore {
   private _trips$ = new BehaviorSubject<Trip[]>([]);
   public get trips$(): BehaviorSubject<Trip[]> {
     return this._trips$;
+  }
+
+  private _itemsShared$ = new BehaviorSubject<TripItem[]>([]);
+  public get itemsShared$(): BehaviorSubject<TripItem[]> {
+    return this._itemsShared$;
   }
 
   private _isMyProfile$ = new BehaviorSubject<boolean>(false);
@@ -103,5 +108,9 @@ export class ProfileStore {
   public removeTrip(id: number): void {
     const trips = this._trips$.value.filter((trip) => trip?.id !== id);
     this._trips$.next(trips);
+  }
+
+  public setItemsSharedStore(items: TripItem[]): void {
+    this._itemsShared$.next(items);
   }
 }

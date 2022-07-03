@@ -1,0 +1,27 @@
+<div
+  class="tripill-card d-flex flex-column rounded-3 cursor-pointer bg-light"
+  [routerLink]="detailsLink"
+>
+  <div class="p-2 position-relative">
+    <img
+      class="item-image rounded-3"
+      [src]="item?.image || 'assets/no-image.png'"
+    />
+  </div>
+  <div class="d-flex flex-column p-2">
+    <div class="d-flex justify-content-between">
+      <span class="description text-truncate w-40">{{ item?.location }}</span>
+      <div>
+        <span class="description me-1">{{ item?.lat }}, {{ item?.lng }}</span>
+      </div>
+    </div>
+    <div class="d-flex gap-1">
+      <div>{{ item.numberOfLikes }}</div>
+      <i
+        class="dx-icon-like"
+        [ngClass]="[item.isLiked ? 'text-primary' : ' text-gray']"
+        (click)="$event.stopPropagation(); onLikeItem()"
+      ></i>
+    </div>
+  </div>
+</div>

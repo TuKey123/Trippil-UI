@@ -15,23 +15,17 @@ export class TripDetailService {
   }
 
   public updateTripDetails(
-    tripDetail: Omit<TripDetail, 'items' | 'owner' | 'collaborators'>
-  ): Observable<Omit<TripDetail, 'items' | 'owner' | 'collaborators'>> {
+    tripDetail: Pick<
+      TripDetail,
+      'id' | 'name' | 'description' | 'startDate' | 'endDate' | 'image'
+    >
+  ): Observable<TripDetail> {
     return this._apiService.update(`trips/${tripDetail.id}/`, tripDetail);
   }
 
   public addTripItem(
-    tripItem: Omit<
-      TripItem,
-      | 'id'
-      | 'image'
-      | 'note'
-      | 'description'
-      | 'marker'
-      | 'isShared'
-      | 'ordinal'
-    >
-  ): Observable<Omit<TripItem, 'marker'>> {
+    tripItem: Pick<TripItem, 'trip' | 'lat' | 'lng' | 'location'>
+  ): Observable<TripItem> {
     return this._apiService.post(`items/`, tripItem);
   }
 
@@ -63,5 +57,9 @@ export class TripDetailService {
     return this._apiService.update(`items/${itemId}/update_ordinal/`, {
       ordinal,
     });
+  }
+
+  public getItemDetail(tripId: number, itemId: number): Observable<TripItem> {
+    return this._apiService.get(`trips/${tripId}/item_details/${itemId}/`);
   }
 }

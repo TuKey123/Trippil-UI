@@ -28,4 +28,8 @@ export class AlbumComponent implements OnInit {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((data) => (this.albumDetails = data));
   }
+
+  public onLikeTrip(tripId: number) {
+    this._albumService.likeTrip(tripId).subscribe();
+  }
 }

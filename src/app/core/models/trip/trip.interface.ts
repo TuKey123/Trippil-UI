@@ -3,12 +3,13 @@ import * as mapboxgl from 'mapbox-gl';
 export interface Trip {
   id: number;
   name: string;
-  location: string;
   image?: string;
-  collaborators?: number[];
   album?: number;
   startDate: Date | string | number;
   endDate: Date | string | number;
+  days?: number;
+  isLiked?: boolean;
+  numberOfLikes?: number;
 }
 
 export interface TripDetail {
@@ -19,7 +20,10 @@ export interface TripDetail {
   image?: string;
   startDate: Date | string | number;
   endDate: Date | string | number;
-  items: TripItem[];
+  items: Pick<
+    TripItem,
+    'id' | 'location' | 'lat' | 'lng' | 'ordinal' | 'image' | 'marker'
+  >[];
   owner: {
     id: number;
   };

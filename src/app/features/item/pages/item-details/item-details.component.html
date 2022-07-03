@@ -5,6 +5,7 @@
         width="50"
         height="50"
         class="user-avatar rounded-circle"
+        [routerLink]="'/profile/public/' + owner.id"
         [src]="owner.image || 'assets/no-image.png'"
       />
       <div>

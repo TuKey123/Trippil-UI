@@ -3,6 +3,13 @@ import { isObject } from './helpers';
 export function parsePytoJs(responseData: any) {
   if (!responseData) return {};
 
+  if (
+    typeof responseData === 'string' ||
+    typeof responseData === 'number' ||
+    typeof responseData === 'boolean'
+  )
+    return responseData;
+
   const keys = Object.keys(responseData).map((oldKey) => ({
     oldKey: oldKey,
     newKey: getNewKey(oldKey),

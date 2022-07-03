@@ -14,7 +14,6 @@
 }
 
 .trip-image {
-  min-width: 300px;
   width: 100%;
   height: 170px;
   object-fit: cover;
@@ -40,4 +39,9 @@
     color: white;
     background-color: var(--bs-primary);
   }
+}
+
+.dx-icon-like {
+  font-size: 18px;
+  cursor: pointer;
 }

@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { ItemComponent } from './item/item.component';
 import { FormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
+import { ItemCardComponent } from './item-card/item-card.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { NgxEditorModule } from 'ngx-editor';
     AlbumCardComponent,
     SidePanelComponent,
     ItemComponent,
+    ItemCardComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +33,7 @@ import { NgxEditorModule } from 'ngx-editor';
     LoadingComponent,
     SidePanelComponent,
     ItemComponent,
+    ItemCardComponent,
   ],
 })
 export class ComponentsModule {}

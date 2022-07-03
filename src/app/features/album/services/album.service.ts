@@ -10,4 +10,8 @@ export class AlbumService {
   public getAlbumDetails(id: number): Observable<Album> {
     return this._apiService.get<Album>(`albums/${id}/`);
   }
+
+  public likeTrip(tripId: number): Observable<any> {
+    return this._apiService.update(`trips/${tripId}/like/`, {});
+  }
 }

@@ -125,7 +125,7 @@
           <div
             cdkDrag
             class="item-card border bg-white radius d-flex flex-column gap-1 p-1"
-            (click)="onSelectItem(item)"
+            (click)="onSelectItem(item.id)"
           >
             <img
               [src]="item?.image || 'assets/no-image.png'"
@@ -137,7 +137,7 @@
               <i
                 *ngIf="userProfile.id === tripDetail.owner.id"
                 class="dx-icon-trash fs-5 text-danger cursor-pointer"
-                (click)="$event.stopPropagation(); onRemoveItem(item)"
+                (click)="$event.stopPropagation(); onRemoveItem(item.id)"
               >
               </i>
             </div>

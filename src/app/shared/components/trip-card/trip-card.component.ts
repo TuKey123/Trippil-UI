@@ -15,9 +15,11 @@ export class TripCardComponent implements OnInit {
   @Input() albums?: Album[];
   @Input() showActions = false;
   @Input() showRemoveAction = false;
+  @Input() showLikeAction = false;
 
   @Output() saveAlbumSelectionEmit = new EventEmitter();
   @Output() removeTripEmitter = new EventEmitter();
+  @Output() likeTripEmitter = new EventEmitter();
 
   public trip!: Trip;
   public detailsLink!: string;
@@ -45,5 +47,13 @@ export class TripCardComponent implements OnInit {
     this.popupVisible = !this.popupVisible;
 
     this.saveAlbumSelectionEmit.emit(this.trip);
+  }
+
+  public onTripLike(): void {
+    this.trip.isLiked = !this.trip.isLiked;
+    this.trip.numberOfLikes =
+      Number(this.trip?.numberOfLikes) + (this.trip.isLiked ? 1 : -1);
+
+    this.likeTripEmitter.emit();
   }
 }

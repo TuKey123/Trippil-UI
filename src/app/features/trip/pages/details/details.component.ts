@@ -5,7 +5,7 @@ import {
   AuthService,
   UploadFileService,
 } from 'src/app/core/services';
-import { map, finalize, filter } from 'rxjs';
+import { map, finalize, filter, forkJoin, take } from 'rxjs';
 import { TripDetailService } from '../../services';
 import { ActivatedRoute } from '@angular/router';
 import { TripDetail, TripItem } from 'src/app/core/models/trip';
@@ -47,17 +47,22 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._tripDetailService.getTripDetail(this.id).subscribe((data) => {
-      this.tripDetail = data;
+    forkJoin([
+      this.userProfile$.pipe(take(1)),
+      this._tripDetailService.getTripDetail(this.id),
+    ]).subscribe(([userProfile, trip]) => {
+      this.tripDetail = trip;
+      this.userProfile = userProfile;
 
       setTimeout(() => {
         this._initMap();
-        this._initAutoComplete();
         this._initItemMarkers();
+
+        if (userProfile.id === trip.owner.id) {
+          this._initAutoComplete();
+        }
       }, 0);
     });
-
-    this.userProfile$.subscribe((data) => (this.userProfile = data));
   }
 
   private _initMap(): void {
@@ -97,7 +102,9 @@ export class DetailsComponent implements OnInit {
   }
 
   private _initItemMarkers(): void {
-    const items = this.tripDetail.items?.map((item) => {
+    this.tripDetail.items?.forEach((item) => {
+      if (item.marker) item.marker.remove();
+
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
@@ -111,22 +118,19 @@ export class DetailsComponent implements OnInit {
         .addTo(this.map)
         .setPopup(popup);
 
-      return {
-        ...item,
-        marker,
-      };
+      item.marker = marker;
     });
-
-    this.tripDetail = { ...this.tripDetail, items: items };
   }
 
-  public onSelectItem(item: TripItem): void {
+  public onSelectItem(id: number): void {
     this._appLoadingService.show();
 
-    this._tripDetailService
-      .usersSharedItem(item.id)
+    forkJoin([
+      this._tripDetailService.getItemDetail(this.tripDetail.id, id),
+      this._tripDetailService.usersSharedItem(id),
+    ])
       .pipe(finalize(() => this._appLoadingService.hide()))
-      .subscribe((users) => {
+      .subscribe(([item, users]) => {
         this.showPopupDetails = true;
         this.selectedItem = item;
         this.usersSharedItem = users.sort((previous, current) =>
@@ -144,8 +148,6 @@ export class DetailsComponent implements OnInit {
         lng: this.searchResult.center[0],
         lat: this.searchResult.center[1],
         location: this.searchResult.place_name,
-        startDate: new Date().toISOString(),
-        endDate: new Date().toISOString(),
       })
       .pipe(
         finalize(() => {
@@ -154,41 +156,28 @@ export class DetailsComponent implements OnInit {
         })
       )
       .subscribe((item) => {
-        const popup = new mapboxgl.Popup({
-          closeButton: false,
-          closeOnClick: false,
-          maxWidth: '60px',
-        })
-          .setText(item.ordinal.toString())
-          .addTo(this.map);
+        this.tripDetail.items.push(item);
 
-        const marker = new mapboxgl.Marker()
-          .setLngLat(this.searchResult.center)
-          .addTo(this.map)
-          .setPopup(popup);
-
-        this.tripDetail = {
-          ...this.tripDetail,
-          items: [...this.tripDetail.items, { ...item, marker }],
-        };
+        this._initItemMarkers();
       });
   }
 
-  public onRemoveItem(item: TripItem): void {
+  public onRemoveItem(id: number): void {
     this._appLoadingService.show();
 
     this._tripDetailService
-      .removeTripItem(this.tripDetail.id, item.id)
+      .removeTripItem(this.tripDetail.id, id)
       .pipe(finalize(() => this._appLoadingService.hide()))
       .subscribe(() => {
-        const items = this.tripDetail.items.filter((data) => {
-          if (data.id !== item.id) return true;
+        this.tripDetail.items.forEach((item) => item.marker?.remove());
 
-          data.marker?.remove();
-          return false;
-        });
+        const items = this.tripDetail.items
+          .filter((item) => item.id !== id)
+          .map((item, index) => ({ ...item, ordinal: index }));
 
-        this.tripDetail = { ...this.tripDetail, items };
+        this.tripDetail.items = items;
+
+        this._initItemMarkers();
       });
   }
 
@@ -196,7 +185,14 @@ export class DetailsComponent implements OnInit {
     this._appLoadingService.show();
 
     this._tripDetailService
-      .updateTripDetails(this.tripDetail)
+      .updateTripDetails({
+        id: this.tripDetail.id,
+        name: this.tripDetail.name,
+        startDate: this.tripDetail.startDate,
+        endDate: this.tripDetail.endDate,
+        image: this.tripDetail.image,
+        description: this.tripDetail.description,
+      })
       .pipe(finalize(() => this._appLoadingService.hide()))
       .subscribe();
   }
@@ -221,54 +217,20 @@ export class DetailsComponent implements OnInit {
       })
       .pipe(finalize(() => this._appLoadingService.hide()))
       .subscribe(() => {
-        const items = this.tripDetail.items.map((data) => {
-          if (data.id === item.id) return item;
-          return data;
-        });
+        const items = this.tripDetail.items.map((data) =>
+          data.id === item.id ? item : data
+        );
 
-        this.tripDetail = {
-          ...this.tripDetail,
-          items: items,
-        };
+        this.tripDetail.items = items;
       });
   }
 
   public onItemShare(item: TripItem): void {
-    this._tripDetailService.shareItem(item.id, item.isShared).subscribe(() => {
-      const items = this.tripDetail.items.map((data) => {
-        if (data.id !== item.id) return data;
-
-        return item;
-      });
-
-      this.tripDetail = { ...this.tripDetail, items };
-    });
+    this._tripDetailService.shareItem(item.id, item.isShared).subscribe();
   }
 
   public onItemLike(item: TripItem): void {
-    this._tripDetailService.likeItem(item.id).subscribe(() => {
-      const items = this.tripDetail.items.map((data) => {
-        if (data.id !== item.id) return data;
-
-        return item;
-      });
-
-      this.tripDetail = { ...this.tripDetail, items };
-    });
-  }
-
-  public onFileSelect(event: any): void {
-    this._appLoadingService.show();
-
-    const files = [event.target.files['0']];
-    this._uploadFileService
-      .uploadImage(files)
-      .pipe(
-        map((data) => (data as any).body),
-        filter((data) => !!data),
-        finalize(() => this._appLoadingService.hide())
-      )
-      .subscribe((data) => (this.tripDetail.image = data.image));
+    this._tripDetailService.likeItem(item.id).subscribe();
   }
 
   public drop(event: CdkDragDrop<string[]> | any): void {
@@ -283,11 +245,24 @@ export class DetailsComponent implements OnInit {
       .updateItemOrdinal(item.id, event.currentIndex)
       .subscribe(() => {
         this.tripDetail.items.forEach((item, index) => {
-          item.marker?.remove();
           item.ordinal = index;
         });
 
         this._initItemMarkers();
       });
+  }
+
+  public onFileSelect(event: any): void {
+    this._appLoadingService.show();
+
+    const files = [event.target.files['0']];
+    this._uploadFileService
+      .uploadImage(files)
+      .pipe(
+        map((data) => (data as any).body),
+        filter((data) => !!data),
+        finalize(() => this._appLoadingService.hide())
+      )
+      .subscribe((data) => (this.tripDetail.image = data.image));
   }
 }

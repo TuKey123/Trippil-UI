@@ -1,10 +1,6 @@
-<section
-  *ngIf="!loading; else appLoading"
-  class="d-flex gap-3 flex-wrap flex-grow-1"
->
+<section *ngIf="!loading; else appLoading" class="albums-container">
   <ng-container *ngFor="let album of albums$ | async">
     <app-album-card
-      class="flex-grow-1"
       [album]="album"
       [showActions]="!!(isMyProfile$ | async)"
       (clickEmitter)="onClick(album)"

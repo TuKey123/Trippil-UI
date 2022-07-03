@@ -83,10 +83,13 @@ export class TripsComponent implements OnInit {
     this.trip = {
       id: 0,
       name: '',
-      location: '',
       startDate: new Date().toISOString(),
       endDate: new Date().toISOString(),
     };
+  }
+
+  public onTripLike(tripId: number): void {
+    this._profileService.likeTrip(tripId).subscribe();
   }
 
   public onPopupClose(): void {

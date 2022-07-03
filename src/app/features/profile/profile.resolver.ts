@@ -52,9 +52,9 @@ export class ProfileResolver implements Resolve<User> {
       },
       {
         routerLink: userId
-          ? `/profile/public/${userId}/appreciated`
-          : '/profile/public/appreciated',
-        name: 'APRRECIATED',
+          ? `/profile/public/${userId}/items-shared`
+          : '/profile/public/items-shared',
+        name: 'ITEMS SHARED',
       },
     ];
 

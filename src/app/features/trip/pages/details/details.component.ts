@@ -7,7 +7,7 @@ import {
 } from 'src/app/core/services';
 import { map, finalize, filter, forkJoin, take } from 'rxjs';
 import { TripDetailService } from '../../services';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TripDetail, TripItem } from 'src/app/core/models/trip';
 import { User } from 'src/app/core/models/user';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -43,7 +43,8 @@ export class DetailsComponent implements OnInit {
     private _uploadFileService: UploadFileService,
     private _tripDetailService: TripDetailService,
     private _authService: AuthService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {
@@ -264,5 +265,9 @@ export class DetailsComponent implements OnInit {
         finalize(() => this._appLoadingService.hide())
       )
       .subscribe((data) => (this.tripDetail.image = data.image));
+  }
+
+  public onNavigateToItemDetails(itemId: number) {
+    this._router.navigate([`/items/${itemId}`]);
   }
 }

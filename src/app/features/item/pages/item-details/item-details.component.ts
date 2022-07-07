@@ -80,4 +80,8 @@ export class ItemDetailsComponent implements OnInit {
   public onItemLike(item: TripItem): void {
     this._tripDetailService.likeItem(item.id).subscribe();
   }
+
+  public onNavigateToItemDetails(itemId: number) {
+    window.location.href = `${window.location.origin}/items/${itemId}` as any;
+  }
 }

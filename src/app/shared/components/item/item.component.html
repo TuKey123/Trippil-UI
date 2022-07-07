@@ -197,8 +197,8 @@
               class="user-recommended rounded-circle"
               width="40"
               height="40"
-              [routerLink]="['/items/' + user.itemId]"
               [src]="user.image"
+              (click)="navigateEmit.emit(user.itemId)"
             />
             <div class="fs-6">
               {{ user.firstName + " " + user.lastName }}

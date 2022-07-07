@@ -66,7 +66,7 @@ export class ProfileService {
     return this._apiService.postFile('users/upload-image/', files);
   }
 
-  public updateProfile(user: User): Observable<User> {
+  public updateProfile(user: any): Observable<User> {
     return this._apiService.update<User>(`users/me/profile/`, user);
   }
 

@@ -6,10 +6,7 @@
   <div class="header rounded-top position-relative">
     <img
       class="avatar rounded-circle position-absolute shadow"
-      [src]="
-        userProfile?.image ??
-        'https://cdn-icons-png.flaticon.com/512/147/147142.png'
-      "
+      [src]="userProfile?.image || 'assets/no-avatar.jpg'"
       width="100"
       height="100"
     />

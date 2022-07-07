@@ -18,10 +18,7 @@
   <dxi-item location="after">
     <img
       class="rounded-circle shadow"
-      [src]="
-        (userProfile$ | async)?.image ??
-        'https://cdn-icons-png.flaticon.com/512/147/147142.png'
-      "
+      [src]="(userProfile$ | async)?.image ?? 'assets/no-avatar.jpg'"
       width="36"
       height="36"
     />

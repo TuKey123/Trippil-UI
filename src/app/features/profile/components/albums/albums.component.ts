@@ -49,6 +49,7 @@ export class AlbumsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.showAlbumPopup$.next(false);
     this.subs?.unsubscribe();
   }
 

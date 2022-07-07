@@ -28,6 +28,7 @@ export class ItemComponent implements OnInit, OnDestroy {
   @Output() saveChangesEmit = new EventEmitter();
   @Output() shareEmit = new EventEmitter();
   @Output() likeEmit = new EventEmitter();
+  @Output() navigateEmit = new EventEmitter();
 
   public tabItems = TAB_ITEMS;
 

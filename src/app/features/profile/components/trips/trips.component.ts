@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { finalize, map, mapTo, Subscription } from 'rxjs';
 import { ProfileService } from '../../services/profile.service';
 import { ProfileStore } from '../../store';
@@ -10,7 +10,7 @@ import { AppLoadingService, UploadFileService } from 'src/app/core/services';
   templateUrl: './trips.component.html',
   styleUrls: ['./trips.component.scss'],
 })
-export class TripsComponent implements OnInit {
+export class TripsComponent implements OnInit, OnDestroy {
   public trips$ = this._profileStore.trips$;
   public albums$ = this._profileStore.albums$;
   public isMyProfile$ = this._profileStore.isMyProfile$;
@@ -45,6 +45,10 @@ export class TripsComponent implements OnInit {
         .pipe(finalize(() => (this.loading = false)))
         .subscribe((trips) => this._profileStore.setTripsStore(trips));
     });
+  }
+
+  ngOnDestroy(): void {
+    this._profileStore.showTripPopup$.next(false);
   }
 
   public onAlbumSelectionChanged(trip: Trip): void {

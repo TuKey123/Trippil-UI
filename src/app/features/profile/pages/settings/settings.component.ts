@@ -48,9 +48,29 @@ export class SettingsComponent implements OnInit {
 
     this._appLoadingService.show();
 
+    const dateOfBirth = this.userProfile.dateOfBirth as Date;
+
     this._profileSerivice
-      .updateProfile(this.userProfile)
+      .updateProfile({
+        firstName: this.userProfile.firstName,
+        lastName: this.userProfile.lastName,
+        about: this.userProfile.about,
+        dateOfBirth:
+          typeof dateOfBirth === 'string'
+            ? dateOfBirth
+            : dateOfBirth?.toISOString().split('T')[0],
+        image: this.userProfile?.image ?? '',
+      })
       .pipe(finalize(() => this._appLoadingService.hide()))
-      .subscribe();
+      .subscribe((profile) =>
+        this._authService.setUserProfile({
+          ...this.userProfile,
+          about: profile?.about,
+          firstName: profile?.firstName,
+          lastName: profile?.lastName,
+          image: profile?.image,
+          dateOfBirth: profile?.dateOfBirth,
+        })
+      );
   }
 }

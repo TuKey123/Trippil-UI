@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --no-live-reload",
-    "build": "ng build",
+    "start": "node server.js",
+    "build": "ng build --aot --prod",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
+  },
+  "engines": {
+    "node": "16.5.0",
+    "npm": "8.5.5"
   },
   "private": true,
   "dependencies": {
@@ -31,6 +35,7 @@
     "ngx-editor": "^13.0.0",
     "ngx-google-places-autocomplete": "^2.0.5",
     "rxjs": "~7.5.0",
+    "serve-favicon": "^2.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

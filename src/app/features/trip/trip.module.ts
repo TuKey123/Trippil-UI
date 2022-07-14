@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetailsComponent } from './pages/details/details.component';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgxEditorModule } from 'ngx-editor';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +12,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   imports: [
     TripRoutingModule,
     CommonModule,
-    GoogleMapsModule,
     SharedModule,
     NgxEditorModule,
     FormsModule,

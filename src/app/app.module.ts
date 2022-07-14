@@ -1,6 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
@@ -31,7 +30,6 @@ function initializeApp(appLoadService: AppLoadService) {
     LayoutsModule,
     NavigationsModule,
     ComponentsModule,
-    GooglePlaceModule,
   ],
   providers: [
     AppLoadService,
